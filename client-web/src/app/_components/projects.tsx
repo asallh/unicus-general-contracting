@@ -1,4 +1,5 @@
 import { api } from "~/trpc/server";
+import ProjectCard from "../pages/projects/_components/ProjectCard";
 
 export default async function AllProjects() {
   const projects = await api.project.getAll();
@@ -7,12 +8,10 @@ export default async function AllProjects() {
     <div className="container mx-auto p-6">
       <h1 className="mb-6 text-3xl font-bold">Our Projects</h1>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-2 md:grid-cols-3">
         {projects?.map((project) => (
-          <div key={project.id} className="rounded-md border p-4">
-            <h2 className="text-xl font-semibold">{project.title}</h2>
-
-            <p>{project.description}</p>
+          <div key={project.id} className="p-4">
+            <ProjectCard ProjectTitle={project.title} />
           </div>
         ))}
       </div>
