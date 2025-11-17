@@ -1,11 +1,12 @@
 import { HydrateClient } from "~/trpc/server";
-import Projects from "./_components/projects";
 
 export default async function Home() {
   return (
     <HydrateClient>
       <main>
-        <Projects />
+        <div>
+          This de Home page
+        </div>
       </main>
     </HydrateClient>
   );
