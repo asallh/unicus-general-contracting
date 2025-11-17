@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import MainNavigation from "./_components/navigation";
+import GlobalFooter from "./_components/GlobalFooter";
 
 export const metadata: Metadata = {
   title: "Unicus General Contracting",
@@ -26,9 +27,10 @@ export default function RootLayout({
         <div>
           <MainNavigation />
         </div>
-        <main className="container mx-auto px-4 py-8">
+        <main>
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </main>
+        {/* <GlobalFooter /> */}
       </body>
     </html>
   );

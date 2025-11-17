@@ -16,7 +16,7 @@ export default function MainNavigation(): React.ReactElement {
         />
         <NavigationMenu.List className="flex flex-row items-center justify-center gap-4">
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-lg transition-colors duration-200">
+            <NavigationMenu.Trigger className="hover:text-brand-primary text-lg transition-colors duration-200 ">
               <NavigationMenu.Link>
                 <Link href="/">Home</Link>
               </NavigationMenu.Link>
