@@ -1068,6 +1068,7 @@ export namespace Prisma {
       title: string
       description: string
       imageURL: string[]
+      slug: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["project"]>

@@ -3,7 +3,8 @@ import ProjectCard from "../pages/projects/_components/ProjectCard";
 
 export default async function AllProjects() {
   const projects = await api.project.getAll();
-
+  console.log("AllProjects -> projects", projects);
+  
   return (
     <div className="bg-brand-accent">
       <div className="container mx-auto p-6">
@@ -19,6 +20,7 @@ export default async function AllProjects() {
                     ? (project.imageURL[0] ?? "")
                     : (project.imageURL ?? "")
                 }
+                slug={project.slug}
               />
             </div>
           ))}

@@ -18,6 +18,7 @@ export const projectRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string(),
+        slug: z.string(),
         description: z.string(),
         imageUrls: z.array(z.string()).optional(),
       }),
