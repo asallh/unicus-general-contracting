@@ -29,23 +29,30 @@ export default function ProjectCard({
   projectImage,
 }: ProjectCardProps) {
   return (
-    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl transition-transform duration-200 hover:scale-105 hover:shadow-2xl">
-      <div className="relative aspect-5/3 w-full">
-      <Image
-        src={projectImage}
-        alt={projectTitle + " Cover Image"}
-        fill
-        className="rounded-t-2xl object-cover"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 512px"
-        unoptimized
-      />
+    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/70 hover:shadow-xl">
+      <div className="relative aspect-5/3 w-full overflow-hidden">
+        <Image
+          src={projectImage}
+          alt={projectTitle + " Cover Image"}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 512px"
+          unoptimized
+        />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
       </div>
-      <h2 className="mx-4 pt-6 text-2xl font-semibold text-gray-900">
-      {projectTitle}
-      </h2>
-      <div className="mx-2 mt-6 mb-4 flex w-full">
-      <Button slug={projectId} />
+
+      <div className="flex flex-1 flex-col px-5 pt-4 pb-5">
+        <h2 className="line-clamp-2 text-xl font-semibold text-slate-900">
+          {projectTitle}
+        </h2>
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-xs font-medium tracking-wide text-slate-400 uppercase">
+            View details
+          </span>
+          <Button slug={projectId} />
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -10,21 +10,23 @@ export default async function AllProjects() {
       <div className="container mx-auto p-6">
         <h1 className="mb-6 text-3xl font-bold">Our Projects</h1>
 
-        <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-2 md:grid-cols-3">
-          {projects?.map((project) => (
-            <div key={project.id} className="p-4">
-              <ProjectCard
-                projectId={project.id}
-                projectTitle={project.title}
-                projectImage={
-                  Array.isArray(project.imageURL)
-                    ? (project.imageURL[0] ?? "")
-                    : (project.imageURL ?? "")
-                }
-              />
-            </div>
-          ))}
-        </div>
+        <section className="mx-auto max-w-6xl px-4 py-10">
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
+            {projects?.map((project) => (
+              <div key={project.id} className="p-4">
+                <ProjectCard
+                  projectId={project.id}
+                  projectTitle={project.title}
+                  projectImage={
+                    Array.isArray(project.imageURL)
+                      ? (project.imageURL[0] ?? "")
+                      : (project.imageURL ?? "")
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

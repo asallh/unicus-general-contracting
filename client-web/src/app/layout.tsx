@@ -30,7 +30,7 @@ export default function RootLayout({
         <main>
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </main>
-        {/* <GlobalFooter /> */}
+        <GlobalFooter />
       </body>
     </html>
   );

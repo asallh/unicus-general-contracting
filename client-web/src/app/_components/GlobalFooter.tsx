@@ -5,8 +5,8 @@ export default function GlobalFooter() {
       <Image
         src={"/secondary logo/secondary logo-23.png"}
         alt={"Unicus Secondary Logo"}
-        height={110}
-        width={110}
+        height={220}
+        width={220}
       />
       <p className="text-brand-primary pt-2">
         Produly Serving <span className="font-bold">Alberta</span> since{" "}
