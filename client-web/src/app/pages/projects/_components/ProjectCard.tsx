@@ -46,10 +46,7 @@ export default function ProjectCard({
         <h2 className="line-clamp-2 text-xl font-semibold text-slate-900">
           {projectTitle}
         </h2>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs font-medium tracking-wide text-slate-400 uppercase">
-            View details
-          </span>
+        <div className="mt-4 flex justify-end">
           <Button slug={projectId} />
         </div>
       </div>
