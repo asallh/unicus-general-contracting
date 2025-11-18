@@ -3,7 +3,8 @@
 import Image from "next/image";
 
 interface ProjectCardProps {
-  ProjectTitle: string;
+  projectTitle: string;
+  projectImage: string;
 }
 
 function Button() {
@@ -14,21 +15,24 @@ function Button() {
   );
 }
 
-export default function ProjectCard({ ProjectTitle }: ProjectCardProps) {
+export default function ProjectCard({
+  projectTitle,
+  projectImage,
+}: ProjectCardProps) {
   return (
-    <div className="flex w-80 max-w-full flex-col overflow-hidden rounded-xl bg-white p-4 shadow-md">
+    <div className="flex w-80 max-w-full flex-col overflow-hidden rounded-xl bg-white p-4 shadow-lg">
       <Image
-        src="/placeholder-image.jpg"
-        alt={ProjectTitle + " Cover Image"}
+        src={projectImage}
+        alt={projectTitle + " Cover Image"}
         height={180}
         width={320}
         className="rounded-lg object-cover"
         unoptimized
       />
       <h2 className="pt-4 text-lg font-semibold text-gray-900">
-        {ProjectTitle}
+        {projectTitle}
       </h2>
-      <div className="mt-4 flex w-full ">
+      <div className="mt-4 flex w-full">
         <Button />
       </div>
     </div>

@@ -5,6 +5,12 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    domains: [
+      "unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com",
+    ],
+  },
+};
 
 export default config;
