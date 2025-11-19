@@ -1,5 +1,7 @@
 import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
+import { Button } from 'react-native-paper';
+
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { darkMode, lightMode } from "@/themes/colors";
@@ -21,6 +23,13 @@ export default function HomeScreen() {
     >
       <ThemedView>
         {/* Quick Access Links */}
+        <Button
+          icon="camera"
+          mode="contained"
+          onPress={() => console.log("Pressed")}
+        >
+          Press me
+        </Button>
         {/* Share Projects */}
         {/* Share Website */}
         {/* View Projects */}
