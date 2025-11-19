@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { titleCase } from "~/lib/helper";
 
 interface ProjectCardProps {
   projectId: string;
@@ -44,7 +45,7 @@ export default function ProjectCard({
 
       <div className="flex flex-1 flex-col px-5 pt-4 pb-5">
         <h2 className="line-clamp-2 text-xl font-semibold text-slate-900">
-          {projectTitle}
+          {titleCase(projectTitle)}
         </h2>
         <div className="mt-4 flex justify-end">
           <Button slug={projectId} />

@@ -3,7 +3,6 @@ import ProjectCard from "../pages/projects/_components/ProjectCard";
 
 export default async function AllProjects() {
   const projects = await api.project.getAll();
-  console.log("AllProjects -> projects", projects);
 
   return (
     <div className="bg-brand-accent">
