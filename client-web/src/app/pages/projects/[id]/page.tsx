@@ -18,8 +18,11 @@ function ImageGrid({ url, alt }: ImageDisplaySection) {
 // I want this to be strictly a server side page
 export default async function ProjectDetailsPage({
   params,
-}: ProjectDetailsPageProps) {
-  const projects = await api.project.getById(params.id);
+}: {
+  params: Promise<ProjectDetailsPageProps["params"]>;
+}) {
+  const { id } = await params;
+  const projects = await api.project.getById(id);
 
   return (
     <div className="px-8">
