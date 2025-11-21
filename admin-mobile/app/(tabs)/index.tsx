@@ -6,16 +6,13 @@ import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { darkMode, lightMode } from "@/constants/colors";
 import { ThemedView } from "@/components/themed-view";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 interface ButtonProps {
   icon: string;
   buttonValue: string;
   onPress?: () => void;
 }
-
-const handleViewProjects = () => {
-  console.log("View Projects Clicked");
-};
 
 function MainButton({ icon, buttonValue, onPress }: ButtonProps) {
   const colorScheme = useColorScheme();
@@ -38,12 +35,19 @@ function MainButton({ icon, buttonValue, onPress }: ButtonProps) {
 }
 
 function GridView() {
+  const router = useRouter();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const handleCopy = () => {
     Clipboard.setStringAsync("https://www.unicuscontracting.com/");
     setSnackbarVisible(true);
   };
+
+  const handleViewProjects = () => {
+    console.log("View Projects Clicked");
+    router.push("/views/projects");
+  };
+
   return (
     <ThemedView style={styles.gridContainer}>
       <MainButton
