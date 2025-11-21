@@ -2,9 +2,8 @@ import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import { Button } from 'react-native-paper';
 
-
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { darkMode, lightMode } from "@/themes/colors";
+import { darkMode, lightMode } from "@/constants/colors";
 import { ThemedView } from "@/components/themed-view";
 
 export default function HomeScreen() {

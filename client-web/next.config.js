@@ -7,8 +7,11 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: [
-      "unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com",
+      },
     ],
   },
 };
