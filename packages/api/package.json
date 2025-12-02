@@ -1,13 +1,21 @@
 {
-  "name": "@unicus-contracting/api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@unicus-monorepo/api",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "prisma generate"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.18.1"
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "@trpc/server": "^11.0.0",
+    "superjson": "^2.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "prisma": "^6.6.0"
+  }
 }
