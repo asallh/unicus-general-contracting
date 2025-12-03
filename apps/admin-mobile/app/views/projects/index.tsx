@@ -2,15 +2,10 @@ import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import ProjectCard from "@/components/ProjectCard";
 import { View } from "react-native";
-import { test_projects } from "@/data/sample_data";
 import { trpc } from "@/lib/trpc";
 
 export default function CompletedProjects() {
   const { data: projects, error, isLoading } = trpc.project.getAll.useQuery();
-
-  console.log("Projects:", projects);
-  console.log("Error:", error);
-  console.log("Loading:", isLoading);
 
   if (isLoading) return <ThemedText>Loading...</ThemedText>;
 
