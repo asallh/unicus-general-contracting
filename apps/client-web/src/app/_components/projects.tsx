@@ -5,7 +5,11 @@ export default async function AllProjects() {
   const projects = await api.project.getAll();
 
   if (!projects) {
-    return <center className="m-40 text-6xl">Something went wrong 🚨</center>;
+    return (
+      <center className="m-40 text-6xl font-bold">
+        Something went wrong 🚨
+      </center>
+    );
   }
   return (
     <div className="bg-brand-accent">
