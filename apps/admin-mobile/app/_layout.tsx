@@ -20,8 +20,8 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const apiUrl = new URL(process.env.EXPO_PUBLIC_API_URL!);
-
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL!;
+  
   console.log(apiUrl);
 
   const [trpcClient] = useState(() =>

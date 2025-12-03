@@ -6,13 +6,24 @@ import { test_projects } from "@/data/sample_data";
 import { trpc } from "@/lib/trpc";
 
 export default function CompletedProjects() {
-  const {data: projects} = trpc.project.getAll.useQuery()
+  const { data: projects, error, isLoading } = trpc.project.getAll.useQuery();
+
+  console.log("Projects:", projects);
+  console.log("Error:", error);
+  console.log("Loading:", isLoading);
+
+  if (isLoading) return <ThemedText>Loading...</ThemedText>;
+
+  if (error) return <ThemedText>Error: {error.message}</ThemedText>;
+
+  if (!projects || projects.length === 0)
+    return <ThemedText>No projects found</ThemedText>;
 
   return (
     <ThemedView>
       <ThemedText>Current Projects</ThemedText>
       <View>
-        {projects?.map((project) => (
+        {projects.map((project) => (
           <View key={project.id}>
             <ProjectCard id={project.id} projectTitle={project.title} />
           </View>

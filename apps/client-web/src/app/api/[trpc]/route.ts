@@ -2,13 +2,9 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
 import { env } from "~/env";
-import { appRouter } from "~/server/api/root";
-import { createTRPCContext } from "~/server/api/trpc";
+import { appRouter } from "@unicus-monorepo/api";
+import { createTRPCContext } from "@unicus-monorepo/api";
 
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a HTTP request (e.g. when you make requests from Client Components).
- */
 const createContext = async (req: NextRequest) => {
   return createTRPCContext({
     headers: req.headers,
@@ -29,6 +25,16 @@ const handler = (req: NextRequest) =>
             );
           }
         : undefined,
+  });
+
+export const OPTIONS = () =>
+  new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
   });
 
 export { handler as GET, handler as POST };
