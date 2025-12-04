@@ -1,5 +1,8 @@
 import { api } from "~/trpc/server";
 import ProjectCard from "../pages/projects/_components/ProjectCard";
+import type { RouterOutputs } from "~/trpc/react";
+
+type Project = RouterOutputs["project"]["getAll"][number];
 
 export default async function AllProjects() {
   const projects = await api.project.getAll();
@@ -18,7 +21,7 @@ export default async function AllProjects() {
 
         <section className="mx-auto max-w-6xl px-4 py-10">
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
-            {projects?.map((project) => (
+            {projects?.map((project: Project) => (
               <div key={project.id} className="p-4">
                 <ProjectCard
                   projectId={project.id}
