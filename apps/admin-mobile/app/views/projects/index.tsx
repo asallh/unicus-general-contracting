@@ -1,19 +1,16 @@
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import ProjectCard from "@/components/ProjectCard";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { trpc } from "@/lib/trpc";
-import { ActivityIndicator } from "react-native-paper";
+import Loader from "@/components/Loader";
+import { useRouter } from "expo-router";
 
 export default function CompletedProjects() {
+  const router = useRouter();
   const { data: projects, error, isLoading } = trpc.project.getAll.useQuery();
 
-  if (isLoading)
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator animating={true} size="large" color="#FED411" />
-      </View>
-    );
+  if (isLoading) return <Loader />;
 
   if (error) return <ThemedText>Error: {error.message}</ThemedText>;
 
@@ -25,19 +22,13 @@ export default function CompletedProjects() {
       <ThemedText>Current Projects</ThemedText>
       <View>
         {projects.map((project) => (
-          <View key={project.id}>
-            <ProjectCard id={project.id} projectTitle={project.title} />
-          </View>
+          <ProjectCard
+            key={project.id}
+            project={project}
+            onPress={() => router.push(`/views/projects/${project.id}`)}
+          />
         ))}
       </View>
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

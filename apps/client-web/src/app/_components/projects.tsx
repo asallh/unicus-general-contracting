@@ -1,8 +1,6 @@
 import { api } from "~/trpc/server";
 import ProjectCard from "../pages/projects/_components/ProjectCard";
-import type { RouterOutputs } from "~/trpc/react";
-
-type Project = RouterOutputs["project"]["getAll"][number];
+import type { Project } from "@unicus-monorepo/api";
 
 export default async function AllProjects() {
   const projects = await api.project.getAll();
