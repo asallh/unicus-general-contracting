@@ -1,0 +1,21 @@
+{
+  "name": "@unicus-monorepo/api",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "scripts": {
+    "postinstall": "prisma generate"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "@trpc/server": "^11.0.0",
+    "superjson": "^2.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "prisma": "^6.6.0"
+  }
+}
