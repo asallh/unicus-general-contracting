@@ -1,3 +1,16 @@
+<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+<img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+<img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+<img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" />
+<img src="https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white" />
+<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+<img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=ReactQuery&logoColor=white" />
+<img src="https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+<img src="https://img.shields.io/badge/Expo-1B1F23?style=for-the-badge&logo=expo&logoColor=white" />
+<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+<img src="https://img.shields.io/badge/pnpm-yellow?style=for-the-badge&logo=pnpm&logoColor=white" />
+
+
 # Unicus General Contracting
 
 This project contains the marketing site of Unicus General Contracting as well as the Admin Portal.
@@ -5,6 +18,7 @@ This project contains the marketing site of Unicus General Contracting as well a
 ## Tech Stack
 
 ### Marketing Page (Client Web)
+
 - **T3 Stack**
   - Next.js 15
   - tRPC
@@ -14,12 +28,14 @@ This project contains the marketing site of Unicus General Contracting as well a
   - Tailwind CSS
 
 ### Admin Portal (Admin Mobile)
+
 - React Native
 - Expo
 - tRPC
 - TypeScript
 
 ### Shared
+
 - Monorepo structure (pnpm workspaces + Turbo)
 - Shared API package with tRPC and Prisma
 
@@ -71,6 +87,7 @@ NODE_ENV="development"
 ```
 
 **Getting Supabase Connection Strings:**
+
 1. Go to your Supabase project dashboard
 2. Navigate to Settings → Database
 3. Copy the "Connection string" (URI format) for `DATABASE_URL`
@@ -90,6 +107,7 @@ pnpm prisma migrate dev
 ```
 
 This will:
+
 - Create the database schema
 - Generate the Prisma Client
 - Run any pending migrations
@@ -125,6 +143,7 @@ This uses Turbo to run all apps concurrently.
 #### Option 2: Run Apps Individually
 
 **Client Web (Marketing Site):**
+
 ```bash
 cd apps/client-web
 pnpm dev
@@ -133,12 +152,14 @@ pnpm dev
 The app will be available at `http://localhost:3000`
 
 **Admin Mobile:**
+
 ```bash
 cd apps/admin-mobile
 pnpm dev
 ```
 
 This will start the Expo development server. You can:
+
 - Scan the QR code with Expo Go app on your phone
 - Press `i` to open iOS simulator
 - Press `a` to open Android emulator
