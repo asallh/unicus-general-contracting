@@ -81,7 +81,7 @@ export default function ProjectImagePicker({
     }
   };
 
-  const remvoeImage = (index: number) => {
+  const removeImage = (index: number) => {
     const updatedImages = images.filter((_, i) => i !== index);
     setImages(updatedImages);
     onImagesChange?.(updatedImages);
@@ -164,7 +164,7 @@ export default function ProjectImagePicker({
               />
               <TouchableOpacity
                 style={dynamicStyles.removeButton}
-                onPress={() => remvoeImage(index)}
+                onPress={() => removeImage(index)}
               >
                 <IconButton
                   icon={"close-circle"}
