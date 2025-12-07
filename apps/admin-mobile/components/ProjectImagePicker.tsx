@@ -58,7 +58,7 @@ export default function ProjectImagePicker({
 
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ["images"],
         allowsMultipleSelection: true,
         quality: 0.8,
         allowsEditing: false,
@@ -179,14 +179,16 @@ export default function ProjectImagePicker({
 
       {images.length === 0 && (
         <ThemedView style={dynamicStyles.emptyState}>
-            <ThemedText style={dynamicStyles.emptyStateText}>
-                No Images Selected. Tap the Upload Image to add iamges
-            </ThemedText>
+          <ThemedText style={dynamicStyles.emptyStateText}>
+            No Images Selected. Tap the Upload Image to add iamges
+          </ThemedText>
         </ThemedView>
       )}
 
       {images.length > 0 && (
-        <ThemedText style={{fontSize:12}}>{images.length} of {maxImages} images selected</ThemedText>
+        <ThemedText style={{ fontSize: 12 }}>
+          {images.length} of {maxImages} images selected
+        </ThemedText>
       )}
     </View>
   );

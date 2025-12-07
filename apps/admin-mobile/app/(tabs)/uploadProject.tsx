@@ -7,6 +7,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useState, useMemo } from "react";
 import { Button, TextInput, useTheme } from "react-native-paper";
 import ProjectImagePicker from "@/components/ProjectImagePicker";
+import { useRouter } from "expo-router";
 
 interface formFieldProps {
   theme: "light" | "dark";
@@ -65,6 +66,7 @@ const FormFields = ({ theme }: formFieldProps) => {
 };
 
 export default function AddProjectScreen() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const { width: screenWidth } = Dimensions.get("window");
   const theme = colorScheme ?? "light";
@@ -131,7 +133,7 @@ export default function AddProjectScreen() {
           <Button
             icon="send-variant"
             mode="contained"
-            onPress={() => console.log("Review Pressed")}
+            onPress={() => router.push("/views/newProject")}
             buttonColor={Colors[theme].primary}
           >
             Review Submission
