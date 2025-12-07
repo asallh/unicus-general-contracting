@@ -38,6 +38,12 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This application access's photos to upload to the UGC Database to apply projects to he marketing site.."
+        }
       ]
     ],
     "experiments": {

@@ -29,11 +29,11 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
-    primary: "#4A9FE7", 
-    secondary: "#b0a148ff", 
-    tertiary: "#FFFFFF", 
-    accent: "#2C2C2E", 
-    textColorMain: "#FFFFFF", 
+      primary: "#4A9FE7", 
+  secondary: "#b0a148ff", 
+  tertiary: "#FFFFFF", 
+  accent: "#2C2C2E", 
+  textColorMain: "#FFFFFF", 
   },
 };
 
