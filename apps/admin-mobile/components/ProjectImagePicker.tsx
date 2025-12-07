@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme.web";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useState } from "react";
 import {
   Alert,
@@ -186,7 +186,7 @@ export default function ProjectImagePicker({
       )}
 
       {images.length > 0 && (
-        <ThemedText style={{fontSize:12}}>{images.length} of {maxImages} images se</ThemedText>
+        <ThemedText style={{fontSize:12}}>{images.length} of {maxImages} images selected</ThemedText>
       )}
     </View>
   );
