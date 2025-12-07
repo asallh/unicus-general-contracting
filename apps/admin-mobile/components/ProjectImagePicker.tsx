@@ -180,7 +180,7 @@ export default function ProjectImagePicker({
       {images.length === 0 && (
         <ThemedView style={dynamicStyles.emptyState}>
             <ThemedText style={dynamicStyles.emptyStateText}>
-                No Images Selected. Tap the Upload iamge to add iamges
+                No Images Selected. Tap the Upload Image to add iamges
             </ThemedText>
         </ThemedView>
       )}
