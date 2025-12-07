@@ -6,6 +6,7 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useState, useMemo } from "react";
 import { Button, TextInput, useTheme } from "react-native-paper";
+import ProjectImagePicker from "@/components/ProjectImagePicker";
 
 interface formFieldProps {
   theme: "light" | "dark";
@@ -22,7 +23,7 @@ const FormFields = ({ theme }: formFieldProps) => {
         ...paperTheme,
         colors: {
           ...paperTheme.colors,
-          onSurfaceVariant: theme === "light" ? "#666666" : "#CCCCCC", 
+          onSurfaceVariant: theme === "light" ? "#666666" : "#CCCCCC",
         },
       },
       textInputStyle: {
@@ -54,9 +55,7 @@ const FormFields = ({ theme }: formFieldProps) => {
         style={textInputStyle}
         theme={customTheme}
       />
-
-      {/* Upload Images Section */}
-      
+      <ProjectImagePicker />
     </ThemedView>
   );
 };
@@ -129,6 +128,7 @@ export default function AddProjectScreen() {
             icon="send-variant"
             mode="contained"
             onPress={() => console.log("Review Pressed")}
+            buttonColor={Colors[theme].primary}
           >
             Review Submission
           </Button>
