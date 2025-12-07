@@ -21,6 +21,7 @@ export const Colors = {
     tertiary: "#222",
     accent: "#f5f5f5",
     textColorMain: "#000",
+    danger: "#E53E3E",
   },
   dark: {
     text: "#ECEDEE",
@@ -34,6 +35,7 @@ export const Colors = {
     tertiary: "#FFFFFF",
     accent: "#2C2C2E",
     textColorMain: "#FFFFFF",
+    danger: "#FF6B6B",
   },
 };
 

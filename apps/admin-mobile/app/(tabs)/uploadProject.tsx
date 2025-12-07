@@ -15,6 +15,7 @@ interface formFieldProps {
 const FormFields = ({ theme }: formFieldProps) => {
   const [title, setTitle] = useState("");
   const [briefDescription, setBriefDescription] = useState("");
+  const [selectedImages, setSelectedImages] = useState<any[]>([]);
   const paperTheme = useTheme();
 
   const { customTheme, textInputStyle } = useMemo(
@@ -55,7 +56,10 @@ const FormFields = ({ theme }: formFieldProps) => {
         style={textInputStyle}
         theme={customTheme}
       />
-      <ProjectImagePicker />
+      <ProjectImagePicker
+        onImagesChange={(images) => setSelectedImages(images)}
+        maxImages={20}
+      />
     </ThemedView>
   );
 };
