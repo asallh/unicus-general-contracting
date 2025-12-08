@@ -21,7 +21,6 @@ export async function uploadImageToS3(
     Key: `projects/${fileName}`,
     Body: buffer,
     ContentType: contentType,
-    ACL: "public-read",
   });
 
   await s3Client.send(command);

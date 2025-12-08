@@ -70,10 +70,6 @@ export const projectRouter = createTRPCRouter({
       return { description };
     }),
 
-  /**
-   * Create project with uploaded images
-   * This is called when user clicks "Submit"
-   */
   createWithImages: publicProcedure
     .input(
       z.object({
@@ -90,7 +86,7 @@ export const projectRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { title, description, images } = input;
-
+      console.log("Uplaoding to S3 🪣")
       // Upload all images to S3 and get URLs
       const imageUrls = await Promise.all(
         images.map(async (img) => {
@@ -119,11 +115,12 @@ export const projectRouter = createTRPCRouter({
       );
 
       // Create project in database with image URLs
+      console.log("Uploading to SupaBase ⚡")
       return ctx.db.project.create({
         data: {
           title,
           description,
-          imageURL: imageUrls, // This matches your schema's imageURL field
+          imageURL: imageUrls, 
         },
       });
     }),

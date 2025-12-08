@@ -7,7 +7,7 @@ import { convertImagesToBase64 } from "@/lib/helper";
 import { trpc } from "@/lib/trpc";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { ActivityIndicator, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -91,7 +91,7 @@ export default function ReviewSubmission() {
       Alert.alert("Sucess 🎉", "Project Created Successfully!", [
         {
           text: "Ok",
-          onPress: () => router.back(),
+          onPress: () => router.replace("/(tabs)"),
         },
       ]);
     },
@@ -143,34 +143,38 @@ export default function ReviewSubmission() {
   };
   return (
     <ThemedView>
-      <ThemedText>Title: {title}</ThemedText>
-      <ThemedText>Brief Description: {briefDescription}</ThemedText>
-      {generateProjectDescriptionMutation.isPending ? (
-        <ActivityIndicator size={"small"} color={Colors[theme].secondary} />
-      ) : (
-        <ThemedText>Generated Description: {generatedDescription}</ThemedText>
-      )}
-      <Button
-        mode="outlined"
-        onPress={handleRegenerateDescription}
-        disabled={generateProjectDescriptionMutation.isPending}
-      >
-        {generateProjectDescriptionMutation.isPending
-          ? "Generating..."
-          : "Regenerate Description"}
-      </Button>
-      <ThemedText>Images:{imageUris.length}</ThemedText>
-
-      <View>
+      <ScrollView>
+        <ThemedText>Title: {title}</ThemedText>
+        <ThemedText>Brief Description: {briefDescription}</ThemedText>
+        {generateProjectDescriptionMutation.isPending ? (
+          <ActivityIndicator size={"small"} color={Colors[theme].secondary} />
+        ) : (
+          <ThemedText>Generated Description: {generatedDescription}</ThemedText>
+        )}
         <Button
           mode="outlined"
-          onPress={handleSubmit}
-          disabled={createProjectMutation.isPending || !generatedDescription}
-          loading={createProjectMutation.isPending}
+          onPress={handleRegenerateDescription}
+          disabled={generateProjectDescriptionMutation.isPending}
         >
-          {createProjectMutation.isPending ? "Submitting..." : "Submit Project"}
+          {generateProjectDescriptionMutation.isPending
+            ? "Generating..."
+            : "Regenerate Description"}
         </Button>
-      </View>
+        <ThemedText>Images:{imageUris.length}</ThemedText>
+
+        <View>
+          <Button
+            mode="outlined"
+            onPress={handleSubmit}
+            disabled={createProjectMutation.isPending || !generatedDescription}
+            loading={createProjectMutation.isPending}
+          >
+            {createProjectMutation.isPending
+              ? "Submitting..."
+              : "Submit Project"}
+          </Button>
+        </View>
+      </ScrollView>
     </ThemedView>
   );
 }

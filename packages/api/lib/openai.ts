@@ -34,7 +34,7 @@ export async function generateProjectDescription(
   for (const base64Image of imageBase64s) {
     content.push({
       type: "image_url",
-      image: {
+      image_url: {
         url: `data:image/jpeg;base64,${base64Image}`,
       },
     });

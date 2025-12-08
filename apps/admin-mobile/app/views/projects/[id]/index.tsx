@@ -5,7 +5,7 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme.web";
 import { trpc } from "@/lib/trpc";
 import { useLocalSearchParams } from "expo-router";
-import { Dimensions, StyleSheet, View, Image } from "react-native";
+import { Dimensions, StyleSheet, View, Image, ScrollView } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -86,9 +86,11 @@ export default function ProjectExplorer() {
         </View>
       )}
       <View style={styles.infoContainer}>
-        <ThemedText>{project.id}</ThemedText>
-        <ThemedText>{project.title}</ThemedText>
-        <ThemedText>{project.description}</ThemedText>
+        <ScrollView>
+          <ThemedText>{project.id}</ThemedText>
+          <ThemedText>{project.title}</ThemedText>
+          <ThemedText>{project.description}</ThemedText>
+        </ScrollView>
       </View>
     </ThemedView>
   );
