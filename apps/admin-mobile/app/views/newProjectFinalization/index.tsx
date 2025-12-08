@@ -47,9 +47,14 @@ export default function ReviewSubmission() {
 
   // Move the description generation into a useEffect
   useEffect(() => {
-    if (!hasInitialized.current && title && imageUris.length > 0 && !isLoadingImages) {
+    if (
+      !hasInitialized.current &&
+      title &&
+      imageUris.length > 0 &&
+      !isLoadingImages
+    ) {
       hasInitialized.current = true; // Set flag BEFORE making the call
-      
+
       convertImagesToBase64(imageUris)
         .then((base64Images) => {
           generateProjectDescriptionMutation.mutate({
@@ -64,7 +69,7 @@ export default function ReviewSubmission() {
           hasInitialized.current = false; // Reset on error so user can retry
         });
     }
-  }, [title, imageUris, isLoadingImages, briefDescription]); 
+  }, [title, imageUris, isLoadingImages, briefDescription]);
 
   // tRPC mutations
   const generateProjectDescriptionMutation =
@@ -86,7 +91,7 @@ export default function ReviewSubmission() {
       Alert.alert("Sucess 🎉", "Project Created Successfully!", [
         {
           text: "Ok",
-          onPress: () => router.back,
+          onPress: () => router.back(),
         },
       ]);
     },
