@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-vector-icons/material-design-icons": "^12.4.0",
     "@react-navigation/bottom-tabs": "^7.8.5",
     "@react-navigation/elements": "^2.8.2",
@@ -24,6 +25,7 @@
     "expo": "~54.0.25",
     "expo-clipboard": "^8.0.7",
     "expo-constants": "~18.0.10",
+    "expo-file-system": "~19.0.20",
     "expo-font": "~14.0.9",
     "expo-haptics": "~15.0.7",
     "expo-image": "~3.0.10",

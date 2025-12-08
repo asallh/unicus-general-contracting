@@ -14,7 +14,7 @@ import { IconButton } from "react-native-paper";
 import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
 
-interface ImageInfo {
+export interface ImageInfo {
   uri: string;
   type?: string;
   name?: string;
