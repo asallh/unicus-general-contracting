@@ -56,8 +56,8 @@ function GridView() {
         onPress={handleCopy}
       />
       <MainButton
-        icon={"folder-open-outline"}
-        buttonValue={"View Existing Projects"}
+        icon={"tools"}
+        buttonValue={"Projects"}
         onPress={handleViewProjects}
       />
       <Snackbar

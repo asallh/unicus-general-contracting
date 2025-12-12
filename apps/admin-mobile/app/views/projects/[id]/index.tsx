@@ -4,10 +4,75 @@ import { ThemedView } from "@/components/themed-view";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme.web";
 import { trpc } from "@/lib/trpc";
-import { useLocalSearchParams } from "expo-router";
-import { Dimensions, StyleSheet, View, Image } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  Image,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { Button, Menu, PaperProvider } from "react-native-paper";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
+
+const OptionsMenu = () => {
+  const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const handleDelete = trpc.project.deleteProject.useMutation({
+    onSuccess: () => {
+      Alert.alert("Deleted", "Project successfully deleted", [
+        {
+          text: "Ok",
+          onPress: () => router.replace("/views/projects"),
+        },
+      ]);
+    },
+    onError: (error) => {
+      console.error("Error deleting the project", error);
+      Alert.alert("Error", "Failed to delete");
+    },
+  });
+
+  const confirmDelete = () => {
+    closeMenu();
+    Alert.alert(
+      "Delete Project?",
+      "Are you sure you want to delete this project? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            if (id) {
+              handleDelete.mutate(id);
+            }
+          },
+        },
+      ]
+    );
+  };
+  return (
+    <Menu
+      visible={visible}
+      onDismiss={closeMenu}
+      anchor={<Button onPress={openMenu}>Show menu</Button>}
+    >
+      <Menu.Item onPress={confirmDelete} title="Delete Item from Projects" />
+    </Menu>
+  );
+};
 
 export default function ProjectExplorer() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -55,42 +120,47 @@ export default function ProjectExplorer() {
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: "black",
-      borderBottomColor: Colors[theme].primary,
+      borderBottomColor: Colors[theme].secondary,
       borderBottomWidth: 3,
     },
   });
 
   return (
-    <ThemedView style={styles.mainContainer}>
-      {imageUrls.length > 0 ? (
-        <Carousel
-          width={width}
-          height={400}
-          data={imageUrls}
-          onProgressChange={progress}
-          renderItem={({ item }) => (
-            <View style={dynamicStyles.imageContainer}>
-              <Image
-                source={{ uri: item }}
-                style={styles.image}
-                resizeMode="cover"
-              />
-            </View>
-          )}
-        />
-      ) : (
-        <View style={dynamicStyles.noImagesContainer}>
-          <ThemedText style={styles.noImages}>
-            ❌ No images available 🖼️
-          </ThemedText>
+    <PaperProvider>
+      <ThemedView style={styles.mainContainer}>
+        <OptionsMenu />
+        {imageUrls.length > 0 ? (
+          <Carousel
+            width={width}
+            height={400}
+            data={imageUrls}
+            onProgressChange={progress}
+            renderItem={({ item }) => (
+              <View style={dynamicStyles.imageContainer}>
+                <Image
+                  source={{ uri: item }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              </View>
+            )}
+          />
+        ) : (
+          <View style={dynamicStyles.noImagesContainer}>
+            <ThemedText style={styles.noImages}>
+              ❌ No images available 🖼️
+            </ThemedText>
+          </View>
+        )}
+        <View style={styles.infoContainer}>
+          <ScrollView>
+            <ThemedText>{project.id}</ThemedText>
+            <ThemedText>{project.title}</ThemedText>
+            <ThemedText>{project.description}</ThemedText>
+          </ScrollView>
         </View>
-      )}
-      <View style={styles.infoContainer}>
-        <ThemedText>{project.id}</ThemedText>
-        <ThemedText>{project.title}</ThemedText>
-        <ThemedText>{project.description}</ThemedText>
-      </View>
-    </ThemedView>
+      </ThemedView>
+    </PaperProvider>
   );
 }
 

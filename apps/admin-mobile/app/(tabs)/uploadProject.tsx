@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Alert, Dimensions, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
@@ -6,14 +6,29 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useState, useMemo } from "react";
 import { Button, TextInput, useTheme } from "react-native-paper";
+import ProjectImagePicker from "@/components/ProjectImagePicker";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface formFieldProps {
   theme: "light" | "dark";
+  title: string;
+  setTitle: (text: string) => void;
+  briefDescription: string;
+  setBriefDescription: (text: string) => void;
+  selectedImages: any[];
+  setSelectedImages: (images: any[]) => void;
 }
 
-const FormFields = ({ theme }: formFieldProps) => {
-  const [title, setTitle] = useState("");
-  const [briefDescription, setBriefDescription] = useState("");
+const FormFields = ({
+  theme,
+  title,
+  setTitle,
+  briefDescription,
+  setBriefDescription,
+  selectedImages,
+  setSelectedImages,
+}: formFieldProps) => {
   const paperTheme = useTheme();
 
   const { customTheme, textInputStyle } = useMemo(
@@ -22,7 +37,7 @@ const FormFields = ({ theme }: formFieldProps) => {
         ...paperTheme,
         colors: {
           ...paperTheme.colors,
-          onSurfaceVariant: theme === "light" ? "#666666" : "#CCCCCC", 
+          onSurfaceVariant: theme === "light" ? "#666666" : "#CCCCCC",
         },
       },
       textInputStyle: {
@@ -54,17 +69,55 @@ const FormFields = ({ theme }: formFieldProps) => {
         style={textInputStyle}
         theme={customTheme}
       />
-
-      {/* Upload Images Section */}
-      
+      <ProjectImagePicker
+        onImagesChange={(images) => setSelectedImages(images)}
+        maxImages={20}
+      />
     </ThemedView>
   );
 };
 
 export default function AddProjectScreen() {
+  const [title, setTitle] = useState("");
+  const [briefDescription, setBriefDescription] = useState("");
+  const [selectedImages, setSelectedImages] = useState<any[]>([]);
+
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const { width: screenWidth } = Dimensions.get("window");
   const theme = colorScheme ?? "light";
+
+  const handleReviewSubmission = async () => {
+    if (!title.trim()) {
+      Alert.alert("Error", "Please entera project Title");
+      return;
+    }
+
+    if (selectedImages.length === 0) {
+      Alert.alert("Error", "Please select at least one image");
+      return;
+    }
+
+    try {
+      await AsyncStorage.setItem(
+        "pendingProjectImages",
+        JSON.stringify(selectedImages)
+      );
+      router.push({
+        pathname: "/views/newProjectFinalization",
+        params: {
+          title,
+          briefDescription: briefDescription || "",
+        },
+      });
+    } catch (error) {
+      console.error("Error storing images:", error);
+      Alert.alert(
+        "Error",
+        "Failed to save the project Data. Please try again."
+      );
+    }
+  };
 
   // Create dynamic styles with theme colors
   const dynamicStyles = StyleSheet.create({
@@ -123,12 +176,21 @@ export default function AddProjectScreen() {
       </ThemedView>
 
       <ThemedView style={styles.contentContainer}>
-        <FormFields theme={theme} />
+        <FormFields
+          theme={theme}
+          title={title}
+          setTitle={setTitle}
+          briefDescription={briefDescription}
+          setBriefDescription={setBriefDescription}
+          selectedImages={selectedImages}
+          setSelectedImages={setSelectedImages}
+        />
         <View style={styles.reviewContainer}>
           <Button
             icon="send-variant"
             mode="contained"
-            onPress={() => console.log("Review Pressed")}
+            onPress={handleReviewSubmission}
+            buttonColor={Colors[theme].primary}
           >
             Review Submission
           </Button>

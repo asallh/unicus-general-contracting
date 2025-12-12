@@ -31,7 +31,7 @@ export default async function ProjectDetailsPage({
         <div className="text-xl">{projects?.description}</div>
         <div className="text-xl">{projects?.updatedAt.toDateString()}</div>
       </section>
-      <div className="my-8 flex flex-row gap-4">
+      <div className="my-8 flex flex-wrap gap-4 justify-center content-center">
         {projects?.imageURL?.map((url: string, idx: number) => (
           <ImageGrid
             key={url}
