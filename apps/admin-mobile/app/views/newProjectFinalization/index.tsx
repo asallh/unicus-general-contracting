@@ -45,7 +45,6 @@ export default function ReviewSubmission() {
     loadImages();
   }, []);
 
-  // Move the description generation into a useEffect
   useEffect(() => {
     if (
       !hasInitialized.current &&

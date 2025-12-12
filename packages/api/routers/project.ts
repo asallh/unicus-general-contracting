@@ -1,6 +1,10 @@
 import z from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { generateProjectDescription, uploadImageToS3 } from "../lib";
+import {
+  deleteImagefromS3,
+  generateProjectDescription,
+  uploadImageToS3,
+} from "../lib";
 
 export const projectRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -86,7 +90,7 @@ export const projectRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { title, description, images } = input;
-      console.log("Uplaoding to S3 🪣")
+      console.log("Uplaoding to S3 🪣");
       // Upload all images to S3 and get URLs
       const imageUrls = await Promise.all(
         images.map(async (img) => {
@@ -115,13 +119,34 @@ export const projectRouter = createTRPCRouter({
       );
 
       // Create project in database with image URLs
-      console.log("Uploading to SupaBase ⚡")
+      console.log("Uploading to SupaBase ⚡");
       return ctx.db.project.create({
         data: {
           title,
           description,
-          imageURL: imageUrls, 
+          imageURL: imageUrls,
         },
       });
+    }),
+
+  deleteProject: publicProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.project.findUnique({
+        where: { id: input },
+        select: { imageURL: true },
+      });
+
+      if (!project) {
+        throw new Error("Project not found");
+      }
+
+      if (project.imageURL && project.imageURL.length > 0) {
+        await Promise.allSettled(
+          project.imageURL.map((imageUrl) => deleteImagefromS3(imageUrl))
+        );
+      }
+
+      return ctx.db.project.delete({ where: { id: input } });
     }),
 });

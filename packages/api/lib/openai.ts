@@ -14,7 +14,7 @@ export async function generateProjectDescription(
       type: "text",
       text: `You are a professional construction project description writer. 
           Based on the provided project title, brief description (if any), and images, 
-          write a comprehensive, marketable professional project description for a general contracting company's portfolio for this
+          write a short paragraph about the project. Make it a marketable professional project description for a general contracting company's portfolio for this specfic 
           projects page.
           
           Project Title: ${title}
@@ -24,10 +24,9 @@ export async function generateProjectDescription(
           - The type of project/work shown
           - Key features and details visible in the images
           - Quality of workmanship
-          - Materials used (if visible)
-          - Overall project scope
+          - Highlight the unqique features that were added to the given project
           
-          Make it professional, engaging, and suitable for a portfolio website.`,
+          Make it professional, engaging, and suitable for a portfolio website. Ensure that it SEO and AEO friendly.`,
     },
   ];
 
@@ -39,6 +38,7 @@ export async function generateProjectDescription(
       },
     });
   }
+  console.log("Sending response to AI 🤖")
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -50,6 +50,6 @@ export async function generateProjectDescription(
     ],
     max_completion_tokens: 500,
   });
-
+  console.log("🤖 Ai responded 🤖")
   return response.choices[0]?.message?.content || "No Description Generated";
 }

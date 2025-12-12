@@ -12,6 +12,14 @@ export default async function AllProjects() {
       </center>
     );
   }
+
+  if (projects.length === 0) {
+    return (
+      <center className="m-40 text-4xl font-bold">
+        🏗️ 🛠️ Projects cuurently Under Construction 👷 🚧
+      </center>
+    );
+  }
   return (
     <div className="bg-brand-accent">
       <div className="container mx-auto p-6">
