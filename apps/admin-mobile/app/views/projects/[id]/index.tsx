@@ -105,7 +105,7 @@ export default function ProjectExplorer() {
       margin: 8,
       justifyContent: "center",
       alignItems: "center",
-      borderBottomColor: Colors[theme].primary,
+      borderBottomColor: Colors[theme].secondary,
       borderBottomWidth: 3,
       backgroundColor: Colors[theme].background,
     },
@@ -148,7 +148,7 @@ export default function ProjectExplorer() {
         ) : (
           <View style={dynamicStyles.noImagesContainer}>
             <ThemedText style={styles.noImages}>
-              ❌ No images available 🖼️
+              ❌ No images available
             </ThemedText>
           </View>
         )}
