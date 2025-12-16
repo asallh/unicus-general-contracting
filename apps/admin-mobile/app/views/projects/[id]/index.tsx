@@ -134,6 +134,7 @@ export default function ProjectExplorer() {
             width={width}
             height={400}
             data={imageUrls}
+            loop={false}
             onProgressChange={progress}
             renderItem={({ item }) => (
               <View style={dynamicStyles.imageContainer}>
