@@ -5,8 +5,7 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme.web";
 import { trpc } from "@/lib/trpc";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -21,15 +20,6 @@ import Carousel, {
   ICarouselInstance,
   Pagination,
 } from "react-native-reanimated-carousel";
-
-const defaultDataWith6Colors = [
-  "#B0604D",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
-];
 
 const OptionsMenu = () => {
   const router = useRouter();
@@ -157,6 +147,7 @@ export default function ProjectExplorer() {
         {imageUrls.length > 0 ? (
           <View>
             <Carousel
+              ref={ref}
               width={width}
               height={400}
               data={imageUrls}
@@ -175,7 +166,7 @@ export default function ProjectExplorer() {
 
             <Pagination.Basic
               progress={progress}
-              data={defaultDataWith6Colors}
+              data={imageUrls}
               dotStyle={{ backgroundColor: "#262626" }}
               activeDotStyle={{ backgroundColor: "#f1f1f1" }}
               containerStyle={{ gap: 5, marginBottom: 10 }}
