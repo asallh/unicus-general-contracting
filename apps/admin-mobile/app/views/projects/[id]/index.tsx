@@ -5,6 +5,7 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme.web";
 import { trpc } from "@/lib/trpc";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
 import { useState } from "react";
 import {
   Dimensions,
@@ -16,7 +17,19 @@ import {
 } from "react-native";
 import { Button, Menu, PaperProvider } from "react-native-paper";
 import { useSharedValue } from "react-native-reanimated";
-import Carousel from "react-native-reanimated-carousel";
+import Carousel, {
+  ICarouselInstance,
+  Pagination,
+} from "react-native-reanimated-carousel";
+
+const defaultDataWith6Colors = [
+  "#B0604D",
+  "#899F9C",
+  "#B3C680",
+  "#5C6265",
+  "#F5D399",
+  "#F1F1F1",
+];
 
 const OptionsMenu = () => {
   const router = useRouter();
@@ -88,6 +101,18 @@ export default function ProjectExplorer() {
   const imageUrls = (project?.imageURL || []).filter(
     (url) => url && url.trim() !== ""
   );
+  const ref = React.useRef<ICarouselInstance>(null);
+
+  const onPressPagination = (index: number) => {
+    ref.current?.scrollTo({
+      /**
+       * Calculate the difference between the current index and the target index
+       * to ensure that the carousel scrolls to the nearest index
+       */
+      count: index - progress.value,
+      animated: true,
+    });
+  };
 
   if (isLoading) return <Loader />;
 
@@ -130,22 +155,33 @@ export default function ProjectExplorer() {
       <ThemedView style={styles.mainContainer}>
         <OptionsMenu />
         {imageUrls.length > 0 ? (
-          <Carousel
-            width={width}
-            height={400}
-            data={imageUrls}
-            loop={false}
-            onProgressChange={progress}
-            renderItem={({ item }) => (
-              <View style={dynamicStyles.imageContainer}>
-                <Image
-                  source={{ uri: item }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-              </View>
-            )}
-          />
+          <View>
+            <Carousel
+              width={width}
+              height={400}
+              data={imageUrls}
+              loop={false}
+              onProgressChange={progress}
+              renderItem={({ item }) => (
+                <View style={dynamicStyles.imageContainer}>
+                  <Image
+                    source={{ uri: item }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                </View>
+              )}
+            />
+
+            <Pagination.Basic
+              progress={progress}
+              data={defaultDataWith6Colors}
+              dotStyle={{ backgroundColor: "#262626" }}
+              activeDotStyle={{ backgroundColor: "#f1f1f1" }}
+              containerStyle={{ gap: 5, marginBottom: 10 }}
+              onPress={onPressPagination}
+            />
+          </View>
         ) : (
           <View style={dynamicStyles.noImagesContainer}>
             <ThemedText style={styles.noImages}>
