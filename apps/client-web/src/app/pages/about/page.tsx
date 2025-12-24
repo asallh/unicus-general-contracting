@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ContactBanner from "~/app/_components/ContactBanner";
 import { HydrateClient } from "~/trpc/server";
 
 export default function About() {
@@ -57,16 +58,10 @@ export default function About() {
           </div>
         </section>
       </div>
-      <section className="bg-backgroundDark w-full flex flex-col gap-10">
-        <h1 className="text-white text-center text-4xl pt-16">
-          Let&apos;s chat about how we can make your space unique!
-        </h1>
-        <div className="flex justify-center pb-16">
-          <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
-            Lets Chat!
-          </button>
-        </div>
-      </section>
+      <ContactBanner
+        bannerText="Let’s chat about how we can make your space unique!"
+        buttons={["contact us"]}
+      />
     </HydrateClient>
   );
 }

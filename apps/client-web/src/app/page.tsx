@@ -1,5 +1,6 @@
 import { HydrateClient } from "~/trpc/server";
 import Image from "next/image";
+import ContactBanner from "./_components/ContactBanner";
 
 export default async function Home() {
   return (
@@ -68,7 +69,7 @@ export default async function Home() {
           </div>
           <div className="flex justify-center">
             <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
-              Some Button
+              View All Projects!
             </button>
           </div>
         </div>
@@ -173,23 +174,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* CTA Section - Full Width Dark Background */}
-      <section className="bg-backgroundDark py-8 sm:py-12 md:py-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-text-dark mb-8 text-center text-lg font-bold sm:text-3xl md:text-4xl lg:text-5xl">
-            Ready To Take your Project to the <br />
-            Next Level?
-          </h1>
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-6">
-            <button className="hover:text-backgroundDark w-full rounded-lg border-2 border-white px-6 py-3 text-center font-semibold text-white transition-colors hover:bg-white sm:w-auto sm:px-8 sm:py-4">
-              View Services
-            </button>
-            <button className="border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark w-full rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:w-auto sm:px-8 sm:py-4">
-              I&apos;m Ready
-            </button>
-          </div>
-        </div>
-      </section>
+      <ContactBanner
+        bannerText="Ready to Take your Project to the Next Level?"
+        buttons={["services", "contact us"]}
+      />
     </HydrateClient>
   );
 }
