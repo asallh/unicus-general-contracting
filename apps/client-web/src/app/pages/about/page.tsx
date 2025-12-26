@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ContactBanner from "~/app/_components/ContactBanner";
+import { Separator } from "radix-ui";
 import { HydrateClient } from "~/trpc/server";
 
 export default function About() {
@@ -24,6 +25,7 @@ export default function About() {
             </p>
           </div>
         </section>
+        <Separator.Root className="bg-brand-primary h-0.5 w-full" decorative />
         <section>
           <h1 className="text-brand-primary text-4xl font-bold">
             Meet the Face Behind Unicus General Contracting!
