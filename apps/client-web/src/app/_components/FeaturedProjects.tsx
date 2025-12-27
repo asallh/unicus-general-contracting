@@ -14,7 +14,7 @@ interface FeaturedCardProps {
 const FeaturedCard = ({ title, description }: FeaturedCardProps) => {
   return (
     <div>
-      <h1 className="text-2xl font-bold text-brand-secondary">{title}</h1>
+      <h1 className="text-brand-secondary text-2xl font-bold">{title}</h1>
       <p className="text-l">{description}</p>
     </div>
   );
@@ -61,7 +61,7 @@ export function FeaturedProjects() {
           </div>
           <div className="flex justify-center">
             <Link href="/pages/projects">
-              <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
+              <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark hover: cursor-pointer rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
                 View All Projects!
               </button>
             </Link>

@@ -21,34 +21,41 @@ export default function MainNavigation(): React.ReactElement {
             priority
           />
         </Link>
-        
+
         {/* Desktop Navigation */}
-        <NavigationMenu.List className="hidden md:flex flex-row items-center justify-center gap-4 lg:gap-6">
+        <NavigationMenu.List className="hidden flex-row items-center justify-center gap-4 md:flex lg:gap-6">
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base lg:text-lg transition-colors duration-200">
+            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
               <NavigationMenu.Link>
                 <Link href="/">Home</Link>
               </NavigationMenu.Link>
             </NavigationMenu.Trigger>
           </NavigationMenu.Item>
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base lg:text-lg transition-colors duration-200">
+            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
               <NavigationMenu.Link asChild>
                 <Link href="/pages/about">About</Link>
               </NavigationMenu.Link>
             </NavigationMenu.Trigger>
           </NavigationMenu.Item>
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base lg:text-lg transition-colors duration-200">
+            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
               <NavigationMenu.Link>
                 <Link href="/pages/services">Services</Link>
               </NavigationMenu.Link>
             </NavigationMenu.Trigger>
           </NavigationMenu.Item>
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base lg:text-lg transition-colors duration-200">
+            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
               <NavigationMenu.Link>
                 <Link href="/pages/projects">Our Work</Link>
+              </NavigationMenu.Link>
+            </NavigationMenu.Trigger>
+          </NavigationMenu.Item>
+          <NavigationMenu.Item>
+            <NavigationMenu.Trigger className="hover:text-brand-accent border-brand-primary text-brand-primary hover:bg-brand-primary border-2 p-2 text-base transition-colors duration-200 lg:text-lg rounded-xl">
+              <NavigationMenu.Link>
+                <Link href="/pages/contact">Contact Us</Link>
               </NavigationMenu.Link>
             </NavigationMenu.Trigger>
           </NavigationMenu.Item>
@@ -56,14 +63,14 @@ export default function MainNavigation(): React.ReactElement {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden flex flex-col gap-1.5 p-2"
+          className="flex flex-col gap-1.5 p-2 md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
           aria-expanded={isMobileMenuOpen}
         >
           <span
             className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
-              isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
+              isMobileMenuOpen ? "translate-y-2 rotate-45" : ""
             }`}
           />
           <span
@@ -73,7 +80,7 @@ export default function MainNavigation(): React.ReactElement {
           />
           <span
             className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
-              isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+              isMobileMenuOpen ? "-translate-y-2 -rotate-45" : ""
             }`}
           />
         </button>
@@ -81,32 +88,32 @@ export default function MainNavigation(): React.ReactElement {
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden w-full bg-brand-secondary border-t border-brand-textColorMain/20">
+        <div className="bg-brand-secondary border-brand-textColorMain/20 w-full border-t md:hidden">
           <nav className="flex flex-col py-4">
             <Link
               href="/"
-              className="px-6 py-3 text-base hover:bg-brand-primary/10 hover:text-brand-primary transition-colors"
+              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/pages/about"
-              className="px-6 py-3 text-base hover:bg-brand-primary/10 hover:text-brand-primary transition-colors"
+              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               About
             </Link>
             <Link
               href="/pages/services"
-              className="px-6 py-3 text-base hover:bg-brand-primary/10 hover:text-brand-primary transition-colors"
+              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Services
             </Link>
             <Link
               href="/pages/projects"
-              className="px-6 py-3 text-base hover:bg-brand-primary/10 hover:text-brand-primary transition-colors"
+              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Our Work

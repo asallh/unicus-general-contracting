@@ -56,7 +56,7 @@ export default async function Home() {
               <ol className="list-outside list-decimal space-y-4 pl-6 text-base leading-relaxed text-gray-700 sm:text-lg">
                 <li>
                   <h3 className="inline font-semibold">
-                    support from concept to creation
+                    Support From Concept to Creation
                   </h3>
                   <p>
                     We recognize that our clients have a dream vision and
@@ -67,7 +67,7 @@ export default async function Home() {
                 </li>
                 <li>
                   <h3 className="inline font-semibold">
-                    reliable construction
+                    Reliable Construction
                   </h3>
                   <p>
                     We pride ourselves on bringing reliable construction to our
@@ -76,7 +76,7 @@ export default async function Home() {
                 </li>
                 <li>
                   <h3 className="inline font-semibold">
-                    experts in efficiency and consistency
+                    Experts in Efficiency and Consistency
                   </h3>
                   <p>
                     Our team has mastered a signature process to building,
@@ -85,7 +85,7 @@ export default async function Home() {
                   </p>
                 </li>
                 <li>
-                  <h3 className="inline font-semibold">superior quality</h3>
+                  <h3 className="inline font-semibold">Superior Quality</h3>
                   <p>
                     Our brand is based on the foundation of being unique, we
                     translate this passion into every project and build. We
