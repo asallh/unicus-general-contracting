@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const buttonDetails = [
   {
     page: "home",
@@ -37,19 +39,25 @@ interface buttonProps {
   variant?: "primary" | "secondary";
 }
 
-const ContactButton = ({ buttonCaption, variant = "primary" }: buttonProps) => {
+const ContactButton = ({
+  buttonCaption,
+  variant = "primary",
+  href,
+}: buttonProps) => {
   const baseClasses =
     "w-full rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:w-auto sm:px-8 sm:py-4";
 
   const variantClasses =
     variant === "primary"
-      ? "border-white text-white hover:bg-white hover:text-backgroundDark"
-      : "border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark";
+      ? "border-white text-white hover:bg-white hover:text-backgroundDark hover:cursor-pointer"
+      : "border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark hover:cursor-pointer";
 
   return (
-    <button className={`${baseClasses} ${variantClasses}`}>
-      {buttonCaption}
-    </button>
+    <Link href={href}>
+      <button className={`${baseClasses} ${variantClasses}`}>
+        {buttonCaption}
+      </button>
+    </Link>
   );
 };
 
