@@ -79,7 +79,7 @@ function ImageGallery({ images }: ImageGalleryProps) {
               </div>
 
               <button
-                className="absolute top-4 right-4 text-white hover:text-gray-300"
+                className="absolute top-4 right-4 text-white hover:text-brand-primary"
                 onClick={closeModal}
               >
                 <X size={28} className="sm:h-7 sm:w-7" />
@@ -90,7 +90,7 @@ function ImageGallery({ images }: ImageGalleryProps) {
                   e.stopPropagation();
                   showPrev();
                 }}
-                className="absolute top-1/2 left-4 -translate-y-1/2 text-3xl text-white hover:text-gray-300"
+                className="absolute top-1/2 left-4 -translate-y-1/2 text-5xl text-white hover:text-brand-primary"
               >
                 ‹
               </button>
@@ -100,7 +100,7 @@ function ImageGallery({ images }: ImageGalleryProps) {
                   e.stopPropagation();
                   showNext();
                 }}
-                className="absolute top-1/2 right-4 -translate-y-1/2 text-3xl text-white hover:text-gray-300"
+                className="absolute top-1/2 right-4 -translate-y-1/2 text-5xl text-white hover:text-brand-primary"
               >
                 ›
               </button>

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import ContactBanner from "~/app/_components/ContactBanner";
 import ImageGallery from "~/app/_components/ImageGallery";
 import { api, HydrateClient } from "~/trpc/server";
@@ -8,20 +7,6 @@ interface ProjectDetailsPageProps {
     id: string;
   };
 }
-
-// function ImageGrid({ url, alt }: ImageDisplaySection) {
-//   return (
-//     <div className="relative aspect-square w-full overflow-hidden rounded-lg sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.667rem)] lg:w-[calc(25%-0.75rem)]">
-//       <Image
-//         src={url}
-//         alt={alt}
-//         fill
-//         className="object-cover"
-//         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-//       />
-//     </div>
-//   );
-// }
 
 // I want this to be strictly a server side page
 export default async function ProjectDetailsPage({
@@ -48,15 +33,6 @@ export default async function ProjectDetailsPage({
             {projects?.description}
           </p>
         </section>
-        {/* <div className="my-6 flex flex-wrap content-center justify-center gap-3 sm:my-8 sm:gap-4">
-          {projects?.imageURL?.map((url: string, idx: number) => (
-            <ImageGrid
-              key={url}
-              url={url}
-              alt={`${projects?.title} image ${idx + 1}`}
-            />
-          ))}
-        </div> */}
         <ImageGallery images={images ?? []} />
       </div>
       <ContactBanner
