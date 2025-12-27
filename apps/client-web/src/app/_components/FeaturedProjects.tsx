@@ -4,6 +4,7 @@ import { api } from "~/trpc/react";
 import { Mirage } from "ldrs/react";
 import "ldrs/react/Mirage.css";
 import type { Project } from "@unicus-monorepo/api";
+import Link from "next/link";
 
 interface FeaturedCardProps {
   title: string;
@@ -13,8 +14,8 @@ interface FeaturedCardProps {
 const FeaturedCard = ({ title, description }: FeaturedCardProps) => {
   return (
     <div>
-      <h1>{title}</h1>
-      <p>{description}</p>
+      <h1 className="text-2xl font-bold text-brand-secondary">{title}</h1>
+      <p className="text-l">{description}</p>
     </div>
   );
 };
@@ -59,9 +60,11 @@ export function FeaturedProjects() {
             ))}
           </div>
           <div className="flex justify-center">
-            <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
-              View All Projects!
-            </button>
+            <Link href="/pages/projects">
+              <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
+                View All Projects!
+              </button>
+            </Link>
           </div>
         </div>
       </section>

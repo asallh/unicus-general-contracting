@@ -3,7 +3,7 @@ import Image from "next/image";
 import ContactBanner from "./_components/ContactBanner";
 import { FeaturedProjects } from "./_components/FeaturedProjects";
 
-export default async function Home() {  
+export default async function Home() {
   return (
     <HydrateClient>
       <section className="relative flex h-[50vh] w-full items-center justify-center overflow-hidden bg-gray-100 sm:h-[60vh] md:h-[75vh]">
@@ -96,9 +96,15 @@ export default async function Home() {
             </div>
             <div className="m-auto flex-1">
               <div className="relative h-64 w-full overflow-hidden rounded-lg bg-gray-200 sm:h-80 lg:h-96">
-                <div className="flex h-full items-center justify-center bg-red-500 text-white">
-                  Image Place Holder
-                </div>
+                <Image
+                  src={
+                    "https://unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com/projects/esso_1.webp"
+                  }
+                  width={800}
+                  height={600}
+                  alt="Esso Project"
+                  className="flex h-full items-center justify-center"
+                />
               </div>
             </div>
           </div>
@@ -137,12 +143,12 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-6 sm:py-8 md:py-12 lg:py-16">
+      {/* To Do Future Feature Implementation */}
+      {/* <section className="container mx-auto px-4 py-6 sm:py-8 md:py-12 lg:py-16">
         <div className="mb-8 sm:mb-12 md:mb-16">
-          {/* Carosuel */}
           <p className="text-base text-gray-700 sm:text-lg">Gallery</p>
         </div>
-      </section>
+      </section> */}
 
       <ContactBanner
         bannerText="Ready to Take your Project to the Next Level?"
