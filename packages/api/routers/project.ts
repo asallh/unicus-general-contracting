@@ -19,6 +19,12 @@ export const projectRouter = createTRPCRouter({
     });
   }),
 
+  getFeatured: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.project.findMany({
+      where: { featuredOnHome: true },
+    });
+  }),
+
   create: publicProcedure
     .input(
       z.object({

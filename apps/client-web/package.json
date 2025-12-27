@@ -32,6 +32,7 @@
     "@trpc/server": "^11.0.0",
     "@unicus-monorepo/api": "workspace:*",
     "framer-motion": "^12.23.26",
+    "ldrs": "^1.1.9",
     "lucide-react": "^0.562.0",
     "next": "15.5.9",
     "radix-ui": "^1.4.3",

@@ -1,8 +1,9 @@
 import { HydrateClient } from "~/trpc/server";
 import Image from "next/image";
 import ContactBanner from "./_components/ContactBanner";
+import { FeaturedProjects } from "./_components/FeaturedProjects";
 
-export default async function Home() {
+export default async function Home() {  
   return (
     <HydrateClient>
       <section className="relative flex h-[50vh] w-full items-center justify-center overflow-hidden bg-gray-100 sm:h-[60vh] md:h-[75vh]">
@@ -43,38 +44,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* Project Samples - Full Width Dark Background */}
-      <section className="bg-backgroundDark py-8 sm:py-12 md:py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-text-dark mb-6 text-center text-xl font-bold sm:mb-8 sm:text-2xl md:text-3xl">
-            Take a Look at Some of our Work!
-          </h2>
-          <div className="text-text-dark mb-6 flex flex-col gap-4 sm:flex-row sm:justify-center sm:gap-6 md:mb-8">
-            <div className="h-64 w-full rounded-lg bg-red-600 sm:h-80 sm:w-64 md:h-96 md:w-80">
-              <div className="flex h-full items-center justify-center text-white">
-                Some Card
-              </div>
-            </div>
-            <div className="h-64 w-full rounded-lg bg-red-600 sm:h-80 sm:w-64 md:h-96 md:w-80">
-              <div className="flex h-full items-center justify-center text-white">
-                Some Card
-              </div>
-            </div>
-            <div className="h-64 w-full rounded-lg bg-red-600 sm:h-80 sm:w-64 md:h-96 md:w-80">
-              <div className="flex h-full items-center justify-center text-white">
-                Some Card
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <button className="text-brand-secondary border-brand-secondary hover:bg-brand-secondary hover:text-backgroundDark rounded-lg border-2 px-6 py-3 text-center font-semibold transition-colors sm:px-8 sm:py-4">
-              View All Projects!
-            </button>
-          </div>
-        </div>
-      </section>
-
+      <FeaturedProjects />
       <section className="container mx-auto px-4 py-6 sm:py-8 md:py-12 lg:py-16">
         <div className="mb-8 sm:mb-12 md:mb-16">
           {/* Selling Points*/}

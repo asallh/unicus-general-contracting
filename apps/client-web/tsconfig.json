@@ -36,7 +36,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
-, "../../packages/api/types.ts"  ],
+    ".next/types/**/*.ts",
+    "../../packages/api/types.ts"
+  ],
   "exclude": ["node_modules", "generated"]
 }

@@ -11,7 +11,7 @@ export default function MainNavigation(): React.ReactElement {
   return (
     <div className="flex flex-col items-center">
       <NavigationMenu.Root className="bg-brand-secondary text-brand-textColorMain flex w-full items-center justify-between p-3 px-4 sm:p-4 sm:px-6 md:px-12">
-        <Link href="/" className="flex-shrink-0">
+        <Link href="/" className="shrink-0">
           <Image
             src="/full_primary/full_primary.png"
             alt="Unicus General Contracting Logo"
