@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { X } from "lucide-react";
-import { HydrateClient } from "~/trpc/server";
 
 interface ImageDisplaySection {
   url: string;
