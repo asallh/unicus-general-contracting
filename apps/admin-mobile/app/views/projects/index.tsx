@@ -1,10 +1,11 @@
 import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
 import ProjectCard from "@/components/ProjectCard";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { trpc } from "@/lib/trpc";
 import Loader from "@/components/Loader";
 import { useRouter } from "expo-router";
+
 
 export default function CompletedProjects() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function CompletedProjects() {
   return (
     <ThemedView>
       <ThemedText>Current Projects</ThemedText>
-      <View>
+      <ScrollView>
         {projects.map((project) => (
           <ProjectCard
             key={project.id}
@@ -28,7 +29,7 @@ export default function CompletedProjects() {
             onPress={() => router.push(`/views/projects/${project.id}`)}
           />
         ))}
-      </View>
+      </ScrollView>
     </ThemedView>
   );
 }

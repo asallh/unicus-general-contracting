@@ -41,6 +41,14 @@ export function FeaturedProjects() {
     console.error("Something went wrong", error);
   }
 
+  if (project?.length === 0) {
+    return (
+      <section className="bg-backgroundDark text-backgroundLight py-8 text-3xl sm:py-12 md:py-16">
+        <center>🚧 Under Construction 🚧</center>
+      </section>
+    );
+  }
+
   return (
     <>
       {/* Project Samples - Full Width Dark Bacƒkground */}
