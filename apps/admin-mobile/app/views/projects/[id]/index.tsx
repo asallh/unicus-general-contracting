@@ -14,33 +14,35 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { Button, Menu, PaperProvider } from "react-native-paper";
+import { IconButton, Menu, PaperProvider } from "react-native-paper";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, {
   ICarouselInstance,
   Pagination,
 } from "react-native-reanimated-carousel";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const OptionsMenu = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [visible, setVisible] = useState(false);
+  const theme = useColorScheme() ?? "light";
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
   const handleDelete = trpc.project.deleteProject.useMutation({
     onSuccess: () => {
-      Alert.alert("Deleted", "Project successfully deleted", [
+      Alert.alert("Deleted", "Project successfully deleted.", [
         {
-          text: "Ok",
+          text: "OK",
           onPress: () => router.replace("/views/projects"),
         },
       ]);
     },
     onError: (error) => {
       console.error("Error deleting the project", error);
-      Alert.alert("Error", "Failed to delete");
+      Alert.alert("Error", "Failed to delete project.");
     },
   });
 
@@ -50,29 +52,37 @@ const OptionsMenu = () => {
       "Delete Project?",
       "Are you sure you want to delete this project? This action cannot be undone.",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            if (id) {
-              handleDelete.mutate(id);
-            }
+            if (id) handleDelete.mutate(id);
           },
         },
       ]
     );
   };
+
   return (
     <Menu
       visible={visible}
       onDismiss={closeMenu}
-      anchor={<Button onPress={openMenu}>Show menu</Button>}
+      anchor={
+        <IconButton
+          icon="dots-vertical"
+          size={24}
+          iconColor={Colors[theme].tertiary}
+          onPress={openMenu}
+        />
+      }
     >
-      <Menu.Item onPress={confirmDelete} title="Delete Item from Projects" />
+      <Menu.Item
+        onPress={confirmDelete}
+        title="Delete Project"
+        leadingIcon="delete-outline"
+        titleStyle={{ color: Colors[theme].danger }}
+      />
     </Menu>
   );
 };
@@ -95,10 +105,6 @@ export default function ProjectExplorer() {
 
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
-      /**
-       * Calculate the difference between the current index and the target index
-       * to ensure that the carousel scrolls to the nearest index
-       */
       count: index - progress.value,
       animated: true,
     });
@@ -108,114 +114,215 @@ export default function ProjectExplorer() {
 
   if (error) {
     console.error("Error", error.message);
-    return <ThemedText>Something Went Wrong</ThemedText>;
+    return (
+      <ThemedView style={styles.centerContainer}>
+        <ThemedText style={styles.centerText}>Something went wrong</ThemedText>
+      </ThemedView>
+    );
   }
 
-  if (!project) return <ThemedText>Project Not Found</ThemedText>;
-
-  // Setting up the dynamic colors for the component
-  const dynamicStyles = StyleSheet.create({
-    noImagesContainer: {
-      height: 400,
-      margin: 8,
-      justifyContent: "center",
-      alignItems: "center",
-      borderBottomColor: Colors[theme].secondary,
-      borderBottomWidth: 3,
-      backgroundColor: Colors[theme].background,
-    },
-    noImages: {
-      marginHorizontal: 32,
-      textAlign: "center",
-      fontSize: 18,
-      color: Colors[theme].text,
-    },
-    imageContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "black",
-      borderBottomColor: Colors[theme].secondary,
-      borderBottomWidth: 3,
-    },
-  });
+  if (!project) {
+    return (
+      <ThemedView style={styles.centerContainer}>
+        <ThemedText style={styles.centerText}>Project not found</ThemedText>
+      </ThemedView>
+    );
+  }
 
   return (
     <PaperProvider>
       <ThemedView style={styles.mainContainer}>
-        <OptionsMenu />
-        {imageUrls.length > 0 ? (
-          <View>
-            <Carousel
-              ref={ref}
-              width={width}
-              height={400}
-              data={imageUrls}
-              loop={false}
-              onProgressChange={progress}
-              renderItem={({ item }) => (
-                <View style={dynamicStyles.imageContainer}>
-                  <Image
-                    source={{ uri: item }}
-                    style={styles.image}
-                    resizeMode="cover"
-                  />
-                </View>
-              )}
-            />
+        {/* Options menu row */}
+        <View style={styles.menuRow}>
+          <OptionsMenu />
+        </View>
 
-            <Pagination.Basic
-              progress={progress}
-              data={imageUrls}
-              dotStyle={{ backgroundColor: "#262626" }}
-              activeDotStyle={{ backgroundColor: "#f1f1f1" }}
-              containerStyle={{ gap: 5, marginBottom: 10 }}
-              onPress={onPressPagination}
-            />
-          </View>
-        ) : (
-          <View style={dynamicStyles.noImagesContainer}>
-            <ThemedText style={styles.noImages}>
-              ❌ No images available
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Image Carousel */}
+          {imageUrls.length > 0 ? (
+            <View>
+              <Carousel
+                ref={ref}
+                width={width}
+                height={300}
+                data={imageUrls}
+                loop={false}
+                onProgressChange={progress}
+                renderItem={({ item }) => (
+                  <View
+                    style={[
+                      styles.imageSlide,
+                      { borderBottomColor: Colors[theme].secondary },
+                    ]}
+                  >
+                    <Image
+                      source={{ uri: item }}
+                      style={styles.image}
+                      resizeMode="cover"
+                    />
+                  </View>
+                )}
+              />
+              <View style={styles.paginationWrapper}>
+                <Pagination.Basic
+                  progress={progress}
+                  data={imageUrls}
+                  dotStyle={styles.dot}
+                  activeDotStyle={[
+                    styles.dot,
+                    { backgroundColor: Colors[theme].primary },
+                  ]}
+                  containerStyle={{ gap: 6 }}
+                  onPress={onPressPagination}
+                />
+                <ThemedText
+                  style={[styles.photoCount, { color: Colors[theme].icon }]}
+                >
+                  {imageUrls.length}{" "}
+                  {imageUrls.length === 1 ? "photo" : "photos"}
+                </ThemedText>
+              </View>
+            </View>
+          ) : (
+            <View
+              style={[
+                styles.noImagesContainer,
+                { backgroundColor: Colors[theme].accent },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name="image-off-outline"
+                size={40}
+                color={Colors[theme].icon}
+              />
+              <ThemedText
+                style={[styles.noImagesText, { color: Colors[theme].icon }]}
+              >
+                No images available
+              </ThemedText>
+            </View>
+          )}
+
+          {/* Project Info */}
+          <View style={styles.infoContainer}>
+            <ThemedText style={styles.projectTitle}>
+              {project.title}
+            </ThemedText>
+
+            {!!project.description && (
+              <View
+                style={[
+                  styles.descriptionCard,
+                  { backgroundColor: Colors[theme].accent },
+                ]}
+              >
+                <ThemedText
+                  style={[
+                    styles.fieldLabel,
+                    { color: Colors[theme].icon },
+                  ]}
+                >
+                  Description
+                </ThemedText>
+                <ThemedText style={styles.descriptionText}>
+                  {project.description}
+                </ThemedText>
+              </View>
+            )}
+
+            <ThemedText
+              style={[styles.idText, { color: Colors[theme].icon }]}
+            >
+              ID: {project.id}
             </ThemedText>
           </View>
-        )}
-        <View style={styles.infoContainer}>
-          <ScrollView>
-            <ThemedText>{project.id}</ThemedText>
-            <ThemedText>{project.title}</ThemedText>
-            <ThemedText>{project.description}</ThemedText>
-          </ScrollView>
-        </View>
+        </ScrollView>
       </ThemedView>
     </PaperProvider>
   );
 }
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   mainContainer: {
-    width,
-    height,
+    flex: 1,
   },
-
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 32,
+  },
+  centerText: {
+    fontSize: 16,
+    textAlign: "center",
+  },
+  menuRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingRight: 8,
+    paddingTop: 4,
+  },
+  imageSlide: {
+    width,
+    height: 300,
+    backgroundColor: "#000",
+    borderBottomWidth: 3,
+  },
   image: {
     width: "100%",
     height: "100%",
   },
-  infoContainer: {
-    padding: 16,
+  paginationWrapper: {
+    alignItems: "center",
+    paddingVertical: 12,
+    gap: 6,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "rgba(0,0,0,0.2)",
+  },
+  photoCount: {
+    fontSize: 12,
   },
   noImagesContainer: {
-    height: 400,
+    height: 180,
     justifyContent: "center",
     alignItems: "center",
-    borderBottomColor: "",
+    gap: 10,
   },
-  noImages: {
-    marginHorizontal: 32,
-    textAlign: "center",
-    fontSize: 18,
+  noImagesText: {
+    fontSize: 15,
+  },
+  infoContainer: {
+    padding: 20,
+    gap: 16,
+  },
+  projectTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    lineHeight: 30,
+  },
+  descriptionCard: {
+    borderRadius: 12,
+    padding: 14,
+    gap: 6,
+  },
+  fieldLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+  },
+  descriptionText: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  idText: {
+    fontSize: 11,
+    fontFamily: "monospace",
   },
 });

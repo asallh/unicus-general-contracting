@@ -10,7 +10,7 @@ import ProjectImagePicker from "@/components/ProjectImagePicker";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-interface formFieldProps {
+interface FormFieldProps {
   theme: "light" | "dark";
   title: string;
   setTitle: (text: string) => void;
@@ -28,7 +28,7 @@ const FormFields = ({
   setBriefDescription,
   selectedImages,
   setSelectedImages,
-}: formFieldProps) => {
+}: FormFieldProps) => {
   const paperTheme = useTheme();
 
   const { customTheme, textInputStyle } = useMemo(
@@ -49,30 +49,47 @@ const FormFields = ({
 
   return (
     <ThemedView style={styles.formContainer}>
-      <TextInput
-        label="Project Title"
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-        textColor={Colors[theme].text}
-        underlineColor={Colors[theme].primary}
-        activeUnderlineColor={Colors[theme].primary}
-        style={textInputStyle}
-        theme={customTheme}
-      />
-      <TextInput
-        label="Brief Description"
-        value={briefDescription}
-        onChangeText={(text) => setBriefDescription(text)}
-        textColor={Colors[theme].text}
-        underlineColor={Colors[theme].primary}
-        activeUnderlineColor={Colors[theme].primary}
-        style={textInputStyle}
-        theme={customTheme}
-      />
-      <ProjectImagePicker
-        onImagesChange={(images) => setSelectedImages(images)}
-        maxImages={20}
-      />
+      <View>
+        <TextInput
+          label="Project Title *"
+          value={title}
+          onChangeText={setTitle}
+          textColor={Colors[theme].text}
+          underlineColor={Colors[theme].primary}
+          activeUnderlineColor={Colors[theme].primary}
+          style={textInputStyle}
+          theme={customTheme}
+          returnKeyType="next"
+        />
+      </View>
+
+      <View>
+        <TextInput
+          label="Brief Description (optional)"
+          value={briefDescription}
+          onChangeText={setBriefDescription}
+          textColor={Colors[theme].text}
+          underlineColor={Colors[theme].primary}
+          activeUnderlineColor={Colors[theme].primary}
+          style={[textInputStyle, styles.multilineInput]}
+          theme={customTheme}
+          multiline
+          numberOfLines={3}
+        />
+        <ThemedText style={[styles.fieldHint, { color: Colors[theme].icon }]}>
+          A brief hint helps the AI generate a better description
+        </ThemedText>
+      </View>
+
+      <View>
+        <ThemedText style={[styles.sectionLabel, { color: Colors[theme].icon }]}>
+          Project Images *
+        </ThemedText>
+        <ProjectImagePicker
+          onImagesChange={setSelectedImages}
+          maxImages={20}
+        />
+      </View>
     </ThemedView>
   );
 };
@@ -89,12 +106,12 @@ export default function AddProjectScreen() {
 
   const handleReviewSubmission = async () => {
     if (!title.trim()) {
-      Alert.alert("Error", "Please entera project Title");
+      Alert.alert("Missing Title", "Please enter a project title.");
       return;
     }
 
     if (selectedImages.length === 0) {
-      Alert.alert("Error", "Please select at least one image");
+      Alert.alert("No Images", "Please select at least one image.");
       return;
     }
 
@@ -112,30 +129,31 @@ export default function AddProjectScreen() {
       });
     } catch (error) {
       console.error("Error storing images:", error);
-      Alert.alert(
-        "Error",
-        "Failed to save the project Data. Please try again."
-      );
+      Alert.alert("Error", "Failed to save project data. Please try again.");
     }
   };
 
-  // Create dynamic styles with theme colors
   const dynamicStyles = StyleSheet.create({
     safeArea: {
       flex: 1,
       backgroundColor: Colors[theme].secondary,
     },
     headerContainer: {
-      paddingBottom: 24,
-      paddingHorizontal: 24,
+      paddingBottom: 20,
+      paddingHorizontal: 20,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: Colors[theme].icon,
+      borderBottomColor: "rgba(0,0,0,0.1)",
     },
     headerText: {
-      fontSize: 24,
+      fontSize: 22,
       fontWeight: "700",
-      letterSpacing: 0.5,
+      letterSpacing: 0.3,
       color: Colors[theme].textColorMain,
+    },
+    headerSubText: {
+      fontSize: 13,
+      color: Colors[theme].textColorMain + "99",
+      marginTop: 2,
     },
     headerShadow: {
       shadowColor: "#000",
@@ -171,7 +189,14 @@ export default function AddProjectScreen() {
           darkColor={Colors.dark.textColorMain}
           style={dynamicStyles.headerText}
         >
-          Add New Projects
+          Add New Project
+        </ThemedText>
+        <ThemedText
+          lightColor={Colors.light.textColorMain}
+          darkColor={Colors.dark.textColorMain}
+          style={dynamicStyles.headerSubText}
+        >
+          Fill in the details and select images
         </ThemedText>
       </ThemedView>
 
@@ -191,6 +216,8 @@ export default function AddProjectScreen() {
             mode="contained"
             onPress={handleReviewSubmission}
             buttonColor={Colors[theme].primary}
+            contentStyle={styles.submitButtonContent}
+            labelStyle={styles.submitButtonLabel}
           >
             Review Submission
           </Button>
@@ -203,13 +230,36 @@ export default function AddProjectScreen() {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    padding: 24,
+    padding: 20,
   },
   formContainer: {
-    gap: 16,
+    gap: 20,
+  },
+  multilineInput: {
+    minHeight: 80,
+    textAlignVertical: "top",
+  },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 10,
+  },
+  fieldHint: {
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 2,
   },
   reviewContainer: {
     marginTop: "auto",
     paddingVertical: 16,
+  },
+  submitButtonContent: {
+    height: 52,
+  },
+  submitButtonLabel: {
+    fontSize: 15,
+    fontWeight: "700",
   },
 });

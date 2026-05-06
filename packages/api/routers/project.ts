@@ -125,7 +125,7 @@ export const projectRouter = createTRPCRouter({
       );
 
       // Create project in database with image URLs
-      console.log("Uploading to SupaBase ⚡");
+      console.log("Uploading to AWS 🗃️");
       return ctx.db.project.create({
         data: {
           title,

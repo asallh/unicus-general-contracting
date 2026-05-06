@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { IconButton } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { ThemedText } from "./themed-text";
 import { ThemedView } from "./themed-view";
 
@@ -36,8 +36,8 @@ export default function ProjectImagePicker({
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
-        "Premession Required",
-        "We need access to your photo Library"
+        "Permission Required",
+        "We need access to your photo library to select images."
       );
       return false;
     }
@@ -50,8 +50,8 @@ export default function ProjectImagePicker({
 
     if (images.length >= maxImages) {
       Alert.alert(
-        "Maxumum Images Reached",
-        `You can only select up to ${maxImages} images`
+        "Maximum Reached",
+        `You can only select up to ${maxImages} images.`
       );
       return;
     }
@@ -77,7 +77,7 @@ export default function ProjectImagePicker({
       }
     } catch (error) {
       console.error("Error picking image:", error);
-      Alert.alert("Error", "Failed to pick iamge. Please try again.");
+      Alert.alert("Error", "Failed to pick image. Please try again.");
     }
   };
 
@@ -87,109 +87,134 @@ export default function ProjectImagePicker({
     onImagesChange?.(updatedImages);
   };
 
-  const dynamicStyles = StyleSheet.create({
-    container: {
-      gap: 12,
-    },
-    uploadButton: {
-      alignSelf: "flex-start",
-    },
-    imagesContainer: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: 12,
-    },
-    imageWrapper: {
-      position: "relative",
-      width: 100,
-      height: 100,
-      borderRadius: 8,
-      overflow: "hidden",
-      backgroundColor: Colors[theme].background,
-      borderWidth: 1,
-      borderColor: Colors[theme].icon,
-    },
-    image: {
-      width: "100%",
-      height: "100%",
-    },
-    removeButton: {
-      position: "absolute",
-      top: -8,
-      right: -8,
-      backgroundColor: "transparent",
-      borderRadius: 12,
-      padding: 2,
-    },
-    emptyState: {
-      padding: 16,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: Colors[theme].background,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: Colors[theme].icon,
-      borderStyle: "dashed",
-    },
-    emptyStateText: {
-      color: Colors[theme].text,
-      fontSize: 14,
-      marginTop: 8,
-    },
-  });
-
   return (
-    <View style={dynamicStyles.container}>
-      <IconButton
-        icon={"cloud-upload"}
-        mode="contained"
-        size={32}
-        iconColor={Colors[theme].background}
-        containerColor={Colors[theme].primary}
+    <View style={styles.container}>
+      <Button
+        icon="cloud-upload"
+        mode="outlined"
         onPress={pickImage}
-        style={dynamicStyles.uploadButton}
-      />
+        textColor={Colors[theme].primary}
+        style={[styles.uploadButton, { borderColor: Colors[theme].primary }]}
+        contentStyle={styles.uploadButtonContent}
+      >
+        Upload Images
+      </Button>
+
       {images.length > 0 && (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={dynamicStyles.imagesContainer}
-        >
-          {images.map((image, index) => (
-            <View key={index} style={dynamicStyles.imageWrapper}>
-              <Image
-                source={{ uri: image.uri }}
-                style={dynamicStyles.image}
-                resizeMode="cover"
-              />
-              <TouchableOpacity
-                style={dynamicStyles.removeButton}
-                onPress={() => removeImage(index)}
+        <>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.imageRow}
+          >
+            {images.map((image, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.imageWrapper,
+                  { borderColor: Colors[theme].icon + "40" },
+                ]}
               >
-                <IconButton
-                  icon={"close-circle"}
-                  size={20}
-                  iconColor={Colors[theme].danger}
+                <Image
+                  source={{ uri: image.uri }}
+                  style={styles.image}
+                  resizeMode="cover"
                 />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => removeImage(index)}
+                  hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                >
+                  <IconButton
+                    icon="close-circle"
+                    size={18}
+                    iconColor={Colors[theme].danger}
+                    style={styles.removeIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+
+          <ThemedText style={[styles.countText, { color: Colors[theme].icon }]}>
+            {images.length} of {maxImages} images selected
+          </ThemedText>
+        </>
       )}
 
       {images.length === 0 && (
-        <ThemedView style={dynamicStyles.emptyState}>
-          <ThemedText style={dynamicStyles.emptyStateText}>
-            No Images Selected. Tap the Upload Image to add iamges
+        <ThemedView
+          style={[
+            styles.emptyState,
+            {
+              borderColor: Colors[theme].icon + "40",
+              backgroundColor: Colors[theme].background,
+            },
+          ]}
+        >
+          <ThemedText
+            style={[styles.emptyStateText, { color: Colors[theme].icon }]}
+          >
+            No images selected — tap the button above to add images.
           </ThemedText>
         </ThemedView>
-      )}
-
-      {images.length > 0 && (
-        <ThemedText style={{ fontSize: 12 }}>
-          {images.length} of {maxImages} images selected
-        </ThemedText>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 14,
+  },
+  uploadButton: {
+    alignSelf: "flex-start",
+    borderRadius: 10,
+  },
+  uploadButtonContent: {
+    height: 44,
+    paddingHorizontal: 4,
+  },
+  imageRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  imageWrapper: {
+    position: "relative",
+    width: 96,
+    height: 96,
+    borderRadius: 10,
+    overflow: "hidden",
+    borderWidth: 1,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  removeButton: {
+    position: "absolute",
+    top: -4,
+    right: -4,
+  },
+  removeIcon: {
+    margin: 0,
+    padding: 0,
+  },
+  emptyState: {
+    padding: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: "dashed",
+  },
+  emptyStateText: {
+    fontSize: 13,
+    textAlign: "center",
+    lineHeight: 18,
+  },
+  countText: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+});

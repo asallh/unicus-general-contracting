@@ -6,62 +6,107 @@ import { HydrateClient } from "~/trpc/server";
 export default function About() {
   return (
     <HydrateClient>
-      <div className="container mx-auto flex flex-col gap-16 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:py-16">
-        <section>
-          <h1 className="mb-4 text-2xl leading-normal font-bold tracking-wide sm:mb-6 sm:text-3xl md:text-4xl">
-            We’re a Calgary-based contracting team passionate about helping
-            businesses bring their dream spaces to life. From first idea to
-            final build, we’re here to make the process smooth, collaborative,
-            and built to last.
+      {/* Hero */}
+      <section className="bg-brand-tertiary py-14 text-white sm:py-16 md:py-20">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
+          <p className="text-brand-secondary mb-3 text-xs font-semibold uppercase tracking-widest sm:text-sm">
+            About Unicus
+          </p>
+          <h1 className="mb-6 max-w-3xl text-2xl font-bold leading-snug sm:text-3xl md:text-4xl lg:text-5xl">
+            We&apos;re a Calgary-based contracting team passionate about helping
+            businesses bring their dream spaces to life.
           </h1>
-          <div className="flex flex-col gap-4">
-            <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
-              Our brand emphasizes a unique & quality experiences as we
-              transform your space through reliable construction.
-            </p>
-            <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
-              We pride ourselves on prioritizing our client&apos;s needs so you
-              receive the best experience with an even better end results.
-            </p>
-          </div>
-        </section>
-        <Separator.Root className="bg-brand-primary h-0.5 w-full" decorative />
-        <section>
-          <h1 className="text-brand-primary text-4xl font-bold">
-            Meet the Face Behind Unicus General Contracting!
-          </h1>
-          <div className="flex">
-            <div className="m-auto mx-16 flex flex-col gap-4">
+          <p className="max-w-2xl text-base text-white/75 sm:text-lg">
+            From first idea to final build, we make the process smooth,
+            collaborative, and built to last.
+          </p>
+        </div>
+      </section>
+
+      {/* Mission */}
+      <section className="container mx-auto px-4 py-14 sm:px-6 sm:py-16 md:px-8 md:py-20">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <h2 className="text-brand-primary mb-4 text-2xl font-bold sm:text-3xl">
+              Our Mission
+            </h2>
+            <div className="space-y-4 text-base leading-relaxed text-gray-600 sm:text-lg">
               <p>
-                At the heart of our growing team is our founder, Baldev Sallh.
+                Our brand emphasizes a unique and quality experience as we
+                transform your space through reliable construction.
               </p>
               <p>
+                We pride ourselves on prioritizing our clients&apos; needs so
+                you receive the best experience with an even better end result.
+              </p>
+              <p>
+                Every project we take on is an opportunity to deliver something
+                truly exceptional — on time, on budget, and beyond expectations.
+              </p>
+            </div>
+          </div>
+          <div className="relative h-64 overflow-hidden rounded-2xl bg-gray-100 sm:h-80 lg:h-96">
+            <Image
+              src="https://unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com/projects/esso_1.webp"
+              alt="Unicus project example"
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          </div>
+        </div>
+      </section>
+
+      <Separator.Root className="bg-brand-primary/15 h-px w-full" decorative />
+
+      {/* Founder */}
+      <section className="container mx-auto px-4 py-14 sm:px-6 sm:py-16 md:px-8 md:py-20">
+        <h2 className="text-brand-primary mb-10 text-2xl font-bold sm:text-3xl md:text-4xl">
+          Meet the Face Behind Unicus
+        </h2>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-14">
+          <div className="order-2 flex-1 lg:order-1">
+            <h3 className="mb-1 text-xl font-bold sm:text-2xl">
+              Baldev Sallh
+            </h3>
+            <p className="text-brand-primary mb-5 text-sm font-semibold uppercase tracking-widest">
+              Founder
+            </p>
+            <div className="space-y-4 text-base leading-relaxed text-gray-600 sm:text-lg">
+              <p>At the heart of our growing team is our founder, Baldev Sallh.</p>
+              <p>
                 Unicus Contracting was built on the belief that great spaces
-                should be both functional and inspiring. With Baldev’s
+                should be both functional and inspiring. With Baldev&apos;s
                 background in diverse trades, our founder set out to bring a
                 hands-on, reliable, and people-first approach to commercial
-                contracting.{" "}
+                contracting.
               </p>
               <p>
                 His passion for helping businesses and communities thrive is
                 what brought the Unicus team together, and it&apos;s what drives
-                us to bring something truly unique to every project. Baldev take
-                pride in doing things right, and is here to support Unicus’s
+                us to bring something truly unique to every project. Baldev takes
+                pride in doing things right, and is here to support Unicus&apos;s
                 clients every step of the way.
               </p>
             </div>
-            <Image
-              src="https://unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com/pops.webp"
-              alt="pops"
-              width={600}
-              height={600}
-              className="mt-6 h-auto w-72 rounded-lg sm:w-96 md:w-[448px] lg:w-[512px]"
-            />
           </div>
-        </section>
-      </div>
+          <div className="order-1 flex justify-center lg:order-2 lg:shrink-0">
+            <div className="overflow-hidden rounded-2xl shadow-lg">
+              <Image
+                src="https://unicus-general-contracting-storage-dev.s3.ca-west-1.amazonaws.com/pops.webp"
+                alt="Baldev Sallh — Founder of Unicus General Contracting"
+                width={400}
+                height={480}
+                className="h-auto w-64 object-cover sm:w-80 md:w-[380px]"
+                unoptimized
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <ContactBanner
-        bannerText="Let’s chat about how we can make your space unique!"
+        bannerText="Let's chat about how we can make your space unique!"
         buttons={["contact us"]}
       />
     </HydrateClient>

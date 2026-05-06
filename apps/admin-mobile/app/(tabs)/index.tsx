@@ -1,84 +1,77 @@
 import { Image } from "expo-image";
-import { StyleSheet, useColorScheme } from "react-native";
-import { Button, Snackbar } from "react-native-paper";
+import { StyleSheet, View, Pressable, useColorScheme } from "react-native";
+import { Snackbar } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { darkMode, lightMode } from "@/constants/colors";
+import { Colors } from "@/constants/theme";
 import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/themed-text";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-interface ButtonProps {
-  icon: string;
-  buttonValue: string;
-  onPress?: () => void;
+const WEBSITE_URL = "https://www.unicuscontracting.com/";
+
+interface ActionCardProps {
+  iconName: keyof typeof MaterialCommunityIcons.glyphMap;
+  title: string;
+  description: string;
+  onPress: () => void;
+  accentColor: string;
+  iconBgColor: string;
+  iconColor: string;
 }
 
-function MainButton({ icon, buttonValue, onPress }: ButtonProps) {
-  const colorScheme = useColorScheme();
-  const backgroundColor =
-    colorScheme === "dark" ? darkMode.primary : lightMode.primary;
-
+function ActionCard({
+  iconName,
+  title,
+  description,
+  onPress,
+  accentColor,
+  iconBgColor,
+  iconColor,
+}: ActionCardProps) {
   return (
-    <Button
-      icon={icon}
-      mode="contained"
+    <Pressable
       onPress={onPress}
-      style={[styles.gridButton, { backgroundColor }]}
-      contentStyle={{ height: 56 }}
-      labelStyle={{ fontSize: 14 }}
-      uppercase={false}
+      style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
     >
-      {buttonValue}
-    </Button>
-  );
-}
-
-function GridView() {
-  const router = useRouter();
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
-
-  const handleCopy = () => {
-    Clipboard.setStringAsync("https://www.unicuscontracting.com/");
-    setSnackbarVisible(true);
-  };
-
-  const handleViewProjects = () => {
-    console.log("View Projects Clicked");
-    router.push("/views/projects");
-  };
-
-  return (
-    <ThemedView style={styles.gridContainer}>
-      <MainButton
-        icon={"content-copy"}
-        buttonValue={"Copy"}
-        onPress={handleCopy}
-      />
-      <MainButton
-        icon={"tools"}
-        buttonValue={"Projects"}
-        onPress={handleViewProjects}
-      />
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-        duration={2000}
-        style={styles.popUp}
-        theme={{ colors: { onSurface: lightMode.textColorMain } }}
+      <ThemedView
+        style={[styles.card, { borderLeftColor: accentColor, borderLeftWidth: 4 }]}
       >
-        Link copied!
-      </Snackbar>
-    </ThemedView>
+        <View style={[styles.iconBg, { backgroundColor: iconBgColor }]}>
+          <MaterialCommunityIcons name={iconName} size={26} color={iconColor} />
+        </View>
+        <View style={styles.cardContent}>
+          <ThemedText style={styles.cardTitle}>{title}</ThemedText>
+          <ThemedText style={styles.cardDescription}>{description}</ThemedText>
+        </View>
+        <MaterialCommunityIcons name="chevron-right" size={22} color="#aaa" />
+      </ThemedView>
+    </Pressable>
   );
 }
 
 export default function HomeScreen() {
+  const colorScheme = useColorScheme() ?? "light";
+  const theme = colorScheme as "light" | "dark";
+  const router = useRouter();
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(WEBSITE_URL);
+    setSnackbarVisible(true);
+  };
+
+  const handleViewProjects = () => {
+    router.push("/views/projects");
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{
-        light: lightMode.secondary,
-        dark: darkMode.secondary,
+        light: Colors.light.secondary,
+        dark: Colors.dark.secondary,
       }}
       headerImage={
         <Image
@@ -87,8 +80,47 @@ export default function HomeScreen() {
         />
       }
     >
-      <ThemedView>
-        <GridView />
+      <ThemedView style={styles.container}>
+        <ThemedText style={styles.welcomeTitle}>Admin Dashboard</ThemedText>
+        <ThemedText
+          style={[styles.welcomeSubtitle, { color: Colors[theme].icon }]}
+        >
+          Manage projects and site content
+        </ThemedText>
+
+        <View style={styles.cardsContainer}>
+          <ActionCard
+            iconName="briefcase-outline"
+            title="View Projects"
+            description="Browse and manage all published projects"
+            onPress={handleViewProjects}
+            accentColor={Colors[theme].primary}
+            iconBgColor={Colors[theme].primary + "18"}
+            iconColor={Colors[theme].primary}
+          />
+          <ActionCard
+            iconName="link-variant"
+            title="Copy Website Link"
+            description={WEBSITE_URL}
+            onPress={handleCopy}
+            accentColor={Colors[theme].tertiary === "#FFFFFF" ? "#888" : Colors[theme].tertiary}
+            iconBgColor={
+              colorScheme === "dark"
+                ? "rgba(255,255,255,0.08)"
+                : "rgba(0,0,0,0.06)"
+            }
+            iconColor={Colors[theme].icon}
+          />
+        </View>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          duration={2000}
+          style={styles.snackbar}
+        >
+          Link copied to clipboard!
+        </Snackbar>
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -96,31 +128,67 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   mainLogo: {
-    height: 178,
+    height: 160,
     width: "80%",
-    maxWidth: 320,
-    minWidth: 200,
+    maxWidth: 300,
+    minWidth: 180,
     alignSelf: "center",
     resizeMode: "contain",
-    marginTop: 52,
-    marginBottom: 24,
+    marginTop: 56,
+    marginBottom: 20,
   },
-  gridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+  container: {
+    flex: 1,
     paddingHorizontal: 16,
-    marginTop: 24,
+    paddingTop: 4,
+    paddingBottom: 32,
   },
-  gridButton: {
-    width: "48%",
-    marginBottom: 16,
-    borderRadius: 32,
+  welcomeTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  welcomeSubtitle: {
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  cardsContainer: {
+    gap: 12,
+  },
+  card: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderRadius: 14,
+    gap: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.07,
+    shadowRadius: 5,
     elevation: 2,
-    overflow: "hidden",
   },
-  popUp: {
+  iconBg: {
+    width: 50,
+    height: 50,
+    borderRadius: 13,
     justifyContent: "center",
-    textAlign: "center",
+    alignItems: "center",
+    flexShrink: 0,
+  },
+  cardContent: {
+    flex: 1,
+    gap: 3,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  cardDescription: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#888",
+  },
+  snackbar: {
+    marginTop: 16,
   },
 });

@@ -14,6 +14,7 @@ import { httpBatchLink } from "@trpc/react-query";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
 import superjson from "superjson";
+import { Colors } from "@/constants/theme";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -21,8 +22,6 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL!;
-  
-  console.log(apiUrl);
 
   const [trpcClient] = useState(() =>
     trpc.createClient({
@@ -35,7 +34,14 @@ export default function RootLayout() {
     })
   );
 
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() ?? "light";
+
+  const brandHeaderOptions = {
+    headerStyle: { backgroundColor: Colors[colorScheme].secondary },
+    headerTintColor: Colors[colorScheme].tertiary,
+    headerTitleStyle: { fontWeight: "700" as const },
+    headerShadowVisible: false,
+  };
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
@@ -45,6 +51,18 @@ export default function RootLayout() {
         >
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="views/projects/index"
+              options={{ title: "Projects", ...brandHeaderOptions }}
+            />
+            <Stack.Screen
+              name="views/projects/[id]/index"
+              options={{ title: "Project Details", ...brandHeaderOptions }}
+            />
+            <Stack.Screen
+              name="views/newProjectFinalization/index"
+              options={{ title: "Review Submission", ...brandHeaderOptions }}
+            />
             <Stack.Screen
               name="modal"
               options={{ presentation: "modal", title: "Modal" }}
