@@ -1,39 +1,56 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import { Platform, StyleSheet } from "react-native";
 
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { colors } = useAppTheme();
 
   return (
     <Tabs
       screenOptions={{
-      tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-      headerShown: false,
-      tabBarButton: HapticTab,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.tabIconDefault,
+        headerShown: false,
+        tabBarButton: HapticTab as never,
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          height: Platform.OS === "ios" ? 84 : 64,
+          paddingBottom: Platform.OS === "ios" ? 28 : 8,
+          paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "600",
+          letterSpacing: 0.2,
+        },
       }}
     >
       <Tabs.Screen
-      name="index"
-      options={{
-        title: "Home",
-        tabBarIcon: ({ color }) => (
-        <IconSymbol size={28} name="house.fill" color={color} />
-        ),
-      }}
+        name="index"
+        options={{
+          title: "Projects",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={26} name="briefcase.fill" color={String(color)} />
+          ),
+        }}
       />
       <Tabs.Screen
-      name="uploadProject"
-      options={{
-        title: "Add/Update Project",
-        tabBarIcon: ({ color }) => (
-        <IconSymbol size={28} name="plus.circle.fill" color={color} />
-        ),
-      }}
+        name="add"
+        options={{
+          title: "Add Project",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol
+              size={26}
+              name="plus.circle.fill"
+              color={String(color)}
+            />
+          ),
+        }}
       />
     </Tabs>
   );

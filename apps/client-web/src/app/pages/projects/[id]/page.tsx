@@ -1,6 +1,7 @@
 import ContactBanner from "~/app/_components/ContactBanner";
 import ImageGallery from "~/app/_components/ImageGallery";
 import { api, HydrateClient } from "~/trpc/server";
+import Link from "next/link";
 
 interface ProjectDetailsPageProps {
   params: {
@@ -8,33 +9,46 @@ interface ProjectDetailsPageProps {
   };
 }
 
-// I want this to be strictly a server side page
 export default async function ProjectDetailsPage({
   params,
 }: {
   params: Promise<ProjectDetailsPageProps["params"]>;
 }) {
   const { id } = await params;
-  const projects = await api.project.getById(id);
+  const project = await api.project.getById(id);
 
-  const images = projects?.imageURL?.map((url: string, idx: number) => ({
+  const images = project?.imageURL?.map((url: string, idx: number) => ({
     url,
-    alt: `${projects?.title} image ${idx + 1}`,
+    alt: `${project?.title} image ${idx + 1}`,
   }));
 
   return (
     <HydrateClient>
-      <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12">
-        <section className="mb-6 sm:mb-8 md:mb-12">
-          <h1 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl">
-            {projects?.title}
+      {/* Header */}
+      <section className="bg-brand-tertiary py-12 text-white sm:py-14 md:py-16">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
+          <Link
+            href="/pages/projects"
+            className="text-brand-secondary mb-4 inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-75"
+          >
+            ← Back to Projects
+          </Link>
+          <h1 className="mt-3 text-2xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
+            {project?.title}
           </h1>
-          <p className="mb-3 text-base leading-relaxed text-gray-700 sm:mb-4 sm:text-lg md:text-xl">
-            {projects?.description}
+        </div>
+      </section>
+
+      {/* Content */}
+      <div className="container mx-auto px-4 py-10 sm:px-6 sm:py-12 md:px-8 md:py-16">
+        {project?.description && (
+          <p className="mb-8 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg md:text-xl">
+            {project.description}
           </p>
-        </section>
+        )}
         <ImageGallery images={images ?? []} />
       </div>
+
       <ContactBanner
         bannerText="Ready to get started?"
         buttons={["services", "projects", "contact us"]}

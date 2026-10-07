@@ -1,36 +1,104 @@
 import Image from "next/image";
+import Link from "next/link";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+
+const quickLinks = [
+  { href: "/", label: "Home" },
+  { href: "/pages/about", label: "About Us" },
+  { href: "/pages/services", label: "Services" },
+  { href: "/pages/projects", label: "Our Work" },
+  { href: "/pages/contact", label: "Contact" },
+];
+
 export default function GlobalFooter() {
   return (
-    <div className="bg-brand-secondary p-6 sm:p-8 md:p-12 lg:p-16">
-      <div className="container mx-auto flex flex-col">
-        <Image
-          src={"/secondary logo/secondary logo-23.png"}
-          alt={"Unicus Secondary Logo"}
-          height={220}
-          width={220}
-          className="h-auto w-32 sm:w-40 md:w-48 lg:w-[220px]"
-        />
-        <p className="text-brand-primary pt-3 text-sm sm:pt-4 sm:text-base md:text-lg">
-          Produly Serving <span className="font-bold">Alberta</span> since{" "}
-          <span className="font-bold">2020</span>
-        </p>
+    <footer className="bg-brand-secondary">
+      <div className="container mx-auto px-4 py-10 sm:px-6 md:px-12 md:py-14">
+        <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+          {/* Brand */}
+          <div>
+            <Image
+              src="/secondary logo/secondary logo-23.png"
+              alt="Unicus Secondary Logo"
+              height={220}
+              width={220}
+              className="mb-4 h-auto w-28 sm:w-36"
+            />
+            <p className="text-brand-tertiary text-sm leading-relaxed sm:text-base">
+              Building unique commercial spaces across Alberta since 2020.
+              Quality, craftsmanship, and reliability — every project.
+            </p>
+            <p className="text-brand-primary mt-3 text-sm font-semibold sm:text-base">
+              Proudly Serving <span className="font-bold">Alberta</span> since{" "}
+              <span className="font-bold">2020</span>
+            </p>
+          </div>
 
-        <div className="mt-8 font-bold underline">
-          <p className="cursor-pointer">(403) 607-2471</p>
-          <a
-            href="mailto:unicuscontracting@gmail.com"
-            className="cursor-pointer"
-          >
-            unicuscontracting@gmail.com{" "}
-          </a>
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-brand-tertiary mb-4 text-sm font-bold uppercase tracking-wider sm:text-base">
+              Quick Links
+            </h3>
+            <ul className="space-y-2">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-brand-tertiary hover:text-brand-primary text-sm transition-colors sm:text-base"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-brand-tertiary mb-4 text-sm font-bold uppercase tracking-wider sm:text-base">
+              Get In Touch
+            </h3>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3">
+                <FaPhone className="text-brand-primary shrink-0" />
+                <a
+                  href="tel:4036072471"
+                  className="text-brand-tertiary hover:text-brand-primary text-sm font-semibold transition-colors sm:text-base"
+                >
+                  (403) 607-2471
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <FaEnvelope className="text-brand-primary mt-0.5 shrink-0" />
+                <a
+                  href="mailto:unicuscontracting@gmail.com"
+                  className="text-brand-tertiary hover:text-brand-primary break-all text-sm font-semibold transition-colors sm:text-base"
+                >
+                  unicuscontracting@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <FaMapMarkerAlt className="text-brand-primary shrink-0" />
+                <span className="text-brand-tertiary text-sm sm:text-base">
+                  Calgary, Alberta, Canada
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div className="mt-4 border-t">
-        We acknowledge that our work takes place on the traditional territories
-        of Indigenous Peoples across Alberta, including Treaty 7 in Calgary and
-        the Métis Nation of Alberta. © Unicus General Contracting 2025. All
-        rights reserved.
+
+      {/* Bottom bar */}
+      <div className="border-brand-tertiary/20 border-t px-4 py-5 sm:px-6 md:px-12">
+        <p className="text-brand-tertiary text-xs leading-relaxed sm:text-sm">
+          We acknowledge that our work takes place on the traditional territories
+          of Indigenous Peoples across Alberta, including Treaty 7 in Calgary
+          and the Métis Nation of Alberta.
+        </p>
+        <p className="text-brand-tertiary mt-2 text-xs sm:text-sm">
+          © Unicus General Contracting 2025. All rights reserved.
+        </p>
       </div>
-    </div>
+    </footer>
   );
 }

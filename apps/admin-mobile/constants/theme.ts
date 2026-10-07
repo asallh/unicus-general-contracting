@@ -1,53 +1,73 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import { Platform } from "react-native";
 
-const tintColorLight = "#0a7ea4";
-const tintColorDark = "#fff";
-
+/**
+ * Unicus brand tokens — aligned with client-web.
+ * Yellow is an accent, not chrome. Blue drives primary actions.
+ */
 export const Colors = {
   light: {
-    text: "#11181C",
-    background: "#fff",
-    tint: tintColorLight,
-    icon: "#687076",
-    tabIconDefault: "#687076",
-    tabIconSelected: tintColorLight,
+    text: "#111111",
+    textMuted: "#6B7280",
+    background: "#F7F7F5",
+    surface: "#FFFFFF",
+    border: "rgba(0,0,0,0.08)",
+    tint: "#1277BD",
+    icon: "#6B7280",
+    tabIconDefault: "#9CA3AF",
+    tabIconSelected: "#1277BD",
     primary: "#1277BD",
+    primaryMuted: "rgba(18,119,189,0.12)",
     secondary: "#FED411",
-    tertiary: "#222",
-    accent: "#f5f5f5",
-    textColorMain: "#000",
-    danger: "#E53E3E",
+    tertiary: "#222222",
+    accent: "#F0F0EE",
+    textColorMain: "#111111",
+    danger: "#DC2626",
+    dangerMuted: "rgba(220,38,38,0.10)",
+    success: "#15803D",
   },
   dark: {
-    text: "#ECEDEE",
-    background: "#151718",
-    tint: tintColorDark,
-    icon: "#9BA1A6",
-    tabIconDefault: "#9BA1A6",
-    tabIconSelected: tintColorDark,
+    text: "#F4F4F5",
+    textMuted: "#A1A1AA",
+    background: "#0F0F10",
+    surface: "#1A1A1C",
+    border: "rgba(255,255,255,0.10)",
+    tint: "#4A9FE7",
+    icon: "#A1A1AA",
+    tabIconDefault: "#71717A",
+    tabIconSelected: "#4A9FE7",
     primary: "#4A9FE7",
-    secondary: "#b0a148ff",
+    primaryMuted: "rgba(74,159,231,0.18)",
+    secondary: "#E6C200",
     tertiary: "#FFFFFF",
-    accent: "#2C2C2E",
-    textColorMain: "#FFFFFF",
-    danger: "#FF6B6B",
+    accent: "#242426",
+    textColorMain: "#F4F4F5",
+    danger: "#F87171",
+    dangerMuted: "rgba(248,113,113,0.14)",
+    success: "#4ADE80",
   },
 };
 
+export const Spacing = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  xxl: 28,
+} as const;
+
+export const Radius = {
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+} as const;
+
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: "system-ui",
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: "ui-serif",
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: "ui-rounded",
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: "ui-monospace",
   },
   default: {

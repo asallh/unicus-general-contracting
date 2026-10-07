@@ -1,126 +1,217 @@
-import { Image } from "expo-image";
-import { StyleSheet, useColorScheme } from "react-native";
-import { Button, Snackbar } from "react-native-paper";
+import EmptyState from "@/components/EmptyState";
+import Loader from "@/components/Loader";
+import ProjectCard from "@/components/ProjectCard";
+import Screen from "@/components/Screen";
+import { ThemedText } from "@/components/themed-text";
+import { Radius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
+import { trpc } from "@/lib/trpc";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { darkMode, lightMode } from "@/constants/colors";
-import { ThemedView } from "@/components/themed-view";
-import { useState } from "react";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
+import { Snackbar } from "react-native-paper";
 
-interface ButtonProps {
-  icon: string;
-  buttonValue: string;
-  onPress?: () => void;
-}
+const WEBSITE_URL = "https://www.unicuscontracting.com/";
 
-function MainButton({ icon, buttonValue, onPress }: ButtonProps) {
-  const colorScheme = useColorScheme();
-  const backgroundColor =
-    colorScheme === "dark" ? darkMode.primary : lightMode.primary;
-
-  return (
-    <Button
-      icon={icon}
-      mode="contained"
-      onPress={onPress}
-      style={[styles.gridButton, { backgroundColor }]}
-      contentStyle={{ height: 56 }}
-      labelStyle={{ fontSize: 14 }}
-      uppercase={false}
-    >
-      {buttonValue}
-    </Button>
-  );
-}
-
-function GridView() {
+export default function ProjectsScreen() {
   const router = useRouter();
+  const { colors } = useAppTheme();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const {
+    data: projects,
+    error,
+    isLoading,
+    isRefetching,
+    refetch,
+  } = trpc.project.getAll.useQuery();
 
-  const handleCopy = () => {
-    Clipboard.setStringAsync("https://www.unicuscontracting.com/");
+  const handleCopyLink = useCallback(async () => {
+    await Clipboard.setStringAsync(WEBSITE_URL);
     setSnackbarVisible(true);
-  };
+  }, []);
 
-  const handleViewProjects = () => {
-    console.log("View Projects Clicked");
-    router.push("/views/projects");
-  };
+  const header = (
+    <View style={[styles.header, { borderBottomColor: colors.border }]}>
+      <View style={styles.headerRow}>
+        <Image
+          source={require("@/assets/images/favicon/favicon-21.png")}
+          style={styles.mark}
+          contentFit="contain"
+        />
+        <View style={styles.headerText}>
+          <ThemedText style={styles.title} numberOfLines={1}>
+            Projects
+          </ThemedText>
+          <ThemedText
+            style={[styles.subtitle, { color: colors.textMuted }]}
+            numberOfLines={2}
+          >
+            Portfolio on the Unicus marketing site
+          </ThemedText>
+        </View>
+        <Pressable
+          onPress={handleCopyLink}
+          hitSlop={10}
+          accessibilityLabel="Copy website link"
+          style={({ pressed }) => [
+            styles.linkButton,
+            {
+              backgroundColor: colors.accent,
+              opacity: pressed ? 0.75 : 1,
+            },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="open-in-new"
+            size={18}
+            color={colors.primary}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  if (isLoading) {
+    return (
+      <Screen padded={false} header={header}>
+        <Loader message="Loading projects…" />
+      </Screen>
+    );
+  }
+
+  if (error) {
+    return (
+      <Screen padded={false} header={header}>
+        <EmptyState
+          icon="alert-circle-outline"
+          title="Couldn’t load projects"
+          message={error.message || "Check your connection and try again."}
+          actionLabel="Retry"
+          onAction={() => refetch()}
+        />
+      </Screen>
+    );
+  }
+
+  if (!projects || projects.length === 0) {
+    return (
+      <Screen padded={false} header={header}>
+        <EmptyState
+          icon="briefcase-plus-outline"
+          title="No projects yet"
+          message="Add a project with photos and we’ll publish it to the marketing site."
+          actionLabel="Add Project"
+          onAction={() => router.push("/(tabs)/add")}
+        />
+      </Screen>
+    );
+  }
 
   return (
-    <ThemedView style={styles.gridContainer}>
-      <MainButton
-        icon={"content-copy"}
-        buttonValue={"Copy"}
-        onPress={handleCopy}
-      />
-      <MainButton
-        icon={"tools"}
-        buttonValue={"Projects"}
-        onPress={handleViewProjects}
+    <Screen padded={false} header={header}>
+      <FlatList
+        data={projects}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ProjectCard
+            project={item}
+            onPress={() => router.push(`/project/${item.id}`)}
+          />
+        )}
+        contentContainerStyle={styles.listContent}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListHeaderComponent={
+          <ThemedText style={[styles.countLabel, { color: colors.textMuted }]}>
+            {projects.length} {projects.length === 1 ? "project" : "projects"}
+          </ThemedText>
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={() => {
+              void refetch();
+            }}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
+        }
+        showsVerticalScrollIndicator={false}
       />
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
         duration={2000}
-        style={styles.popUp}
-        theme={{ colors: { onSurface: lightMode.textColorMain } }}
+        style={{ backgroundColor: colors.tertiary }}
       >
-        Link copied!
+        Website link copied
       </Snackbar>
-    </ThemedView>
-  );
-}
-
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{
-        light: lightMode.secondary,
-        dark: darkMode.secondary,
-      }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/full_primary/full_primary.png")}
-          style={styles.mainLogo}
-        />
-      }
-    >
-      <ThemedView>
-        <GridView />
-      </ThemedView>
-    </ParallaxScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  mainLogo: {
-    height: 178,
-    width: "80%",
-    maxWidth: 320,
-    minWidth: 200,
-    alignSelf: "center",
-    resizeMode: "contain",
-    marginTop: 52,
-    marginBottom: 24,
+  header: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.lg,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  gridContainer: {
+  headerRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    marginTop: 24,
+    alignItems: "center",
+    gap: Spacing.md,
   },
-  gridButton: {
-    width: "48%",
-    marginBottom: 16,
-    borderRadius: 32,
-    elevation: 2,
-    overflow: "hidden",
+  mark: {
+    width: 56,
+    height: 56,
+    flexShrink: 0,
   },
-  popUp: {
+  headerText: {
+    flex: 1,
+    minWidth: 0,
     justifyContent: "center",
-    textAlign: "center",
+    gap: 2,
+  },
+  linkButton: {
+    width: 40,
+    height: 40,
+    borderRadius: Radius.md,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "800",
+    letterSpacing: -0.3,
+    lineHeight: 32,
+    includeFontPadding: false,
+  },
+  subtitle: {
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  listContent: {
+    padding: Spacing.lg,
+    paddingBottom: 40,
+  },
+  countLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+    marginBottom: Spacing.md,
+  },
+  separator: {
+    height: Spacing.md,
   },
 });

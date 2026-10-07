@@ -3,14 +3,38 @@
 import Link from "next/link";
 import Image from "next/image";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/pages/about", label: "About" },
+  { href: "/pages/services", label: "Services" },
+  { href: "/pages/projects", label: "Our Work" },
+];
 
 export default function MainNavigation(): React.ReactElement {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
-    <div className="flex flex-col items-center">
-      <NavigationMenu.Root className="bg-brand-secondary text-brand-textColorMain flex w-full items-center justify-between p-3 px-4 sm:p-4 sm:px-6 md:px-12">
+    <header
+      className={`sticky top-0 z-50 w-full transition-shadow duration-300 ${
+        scrolled ? "shadow-lg" : "shadow-none"
+      }`}
+    >
+      <NavigationMenu.Root className="bg-brand-secondary text-brand-textColorMain flex w-full items-center justify-between px-4 py-3 sm:px-6 md:px-12">
         <Link href="/" className="shrink-0">
           <Image
             src="/full_primary/full_primary.png"
@@ -23,41 +47,36 @@ export default function MainNavigation(): React.ReactElement {
         </Link>
 
         {/* Desktop Navigation */}
-        <NavigationMenu.List className="hidden flex-row items-center justify-center gap-4 md:flex lg:gap-6">
-          <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
-              <NavigationMenu.Link>
-                <Link href="/">Home</Link>
-              </NavigationMenu.Link>
-            </NavigationMenu.Trigger>
-          </NavigationMenu.Item>
-          <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
+        <NavigationMenu.List className="hidden items-center gap-1 md:flex lg:gap-2">
+          {navLinks.map((link) => (
+            <NavigationMenu.Item key={link.href}>
               <NavigationMenu.Link asChild>
-                <Link href="/pages/about">About</Link>
+                <Link
+                  href={link.href}
+                  className={`rounded-lg px-3 py-2 text-base font-medium transition-colors duration-200 lg:text-lg ${
+                    pathname === link.href
+                      ? "text-brand-primary font-semibold"
+                      : "hover:text-brand-primary"
+                  }`}
+                >
+                  {link.label}
+                </Link>
               </NavigationMenu.Link>
-            </NavigationMenu.Trigger>
-          </NavigationMenu.Item>
+            </NavigationMenu.Item>
+          ))}
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
-              <NavigationMenu.Link>
-                <Link href="/pages/services">Services</Link>
-              </NavigationMenu.Link>
-            </NavigationMenu.Trigger>
-          </NavigationMenu.Item>
-          <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-primary text-base transition-colors duration-200 lg:text-lg">
-              <NavigationMenu.Link>
-                <Link href="/pages/projects">Our Work</Link>
-              </NavigationMenu.Link>
-            </NavigationMenu.Trigger>
-          </NavigationMenu.Item>
-          <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="hover:text-brand-accent border-brand-primary text-brand-primary hover:bg-brand-primary border-2 p-2 text-base transition-colors duration-200 lg:text-lg rounded-xl">
-              <NavigationMenu.Link>
-                <Link href="/pages/contact">Contact Us</Link>
-              </NavigationMenu.Link>
-            </NavigationMenu.Trigger>
+            <NavigationMenu.Link asChild>
+              <Link
+                href="/pages/contact"
+                className={`border-brand-primary ml-2 rounded-xl border-2 px-4 py-2 text-base font-semibold transition-colors duration-200 lg:text-lg ${
+                  pathname === "/pages/contact"
+                    ? "bg-brand-primary text-white"
+                    : "text-brand-primary hover:bg-brand-primary hover:text-white"
+                }`}
+              >
+                Contact Us
+              </Link>
+            </NavigationMenu.Link>
           </NavigationMenu.Item>
         </NavigationMenu.List>
 
@@ -87,40 +106,37 @@ export default function MainNavigation(): React.ReactElement {
       </NavigationMenu.Root>
 
       {/* Mobile Menu Dropdown */}
-      {isMobileMenuOpen && (
-        <div className="bg-brand-secondary border-brand-textColorMain/20 w-full border-t md:hidden">
-          <nav className="flex flex-col py-4">
+      <div
+        className={`bg-brand-secondary border-brand-textColorMain/10 overflow-hidden border-t transition-all duration-300 md:hidden ${
+          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <nav className="flex flex-col py-2">
+          {navLinks.map((link) => (
             <Link
-              href="/"
-              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
+              key={link.href}
+              href={link.href}
+              className={`px-6 py-3 text-base transition-colors ${
+                pathname === link.href
+                  ? "text-brand-primary bg-brand-primary/10 font-semibold"
+                  : "hover:bg-brand-primary/10 hover:text-brand-primary"
+              }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Home
+              {link.label}
             </Link>
+          ))}
+          <div className="px-6 py-3">
             <Link
-              href="/pages/about"
-              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
+              href="/pages/contact"
+              className="border-brand-primary text-brand-primary hover:bg-brand-primary block rounded-xl border-2 px-4 py-2.5 text-center text-base font-semibold transition-colors hover:text-white"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              About
+              Contact Us
             </Link>
-            <Link
-              href="/pages/services"
-              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Services
-            </Link>
-            <Link
-              href="/pages/projects"
-              className="hover:bg-brand-primary/10 hover:text-brand-primary px-6 py-3 text-base transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Our Work
-            </Link>
-          </nav>
-        </div>
-      )}
-    </div>
+          </div>
+        </nav>
+      </div>
+    </header>
   );
 }

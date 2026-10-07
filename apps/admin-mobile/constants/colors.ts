@@ -1,3 +1,4 @@
+/** @deprecated Prefer `Colors` from `@/constants/theme`. */
 export const lightMode = {
   primary: "#1277BD",
   secondary: "#FED411",
@@ -7,9 +8,9 @@ export const lightMode = {
 };
 
 export const darkMode = {
-  primary: "#4A9FE7", 
-  secondary: "#b0a148ff", 
-  tertiary: "#FFFFFF", 
-  accent: "#2C2C2E", 
-  textColorMain: "#FFFFFF", 
+  primary: "#4A9FE7",
+  secondary: "#E6C200",
+  tertiary: "#FFFFFF",
+  accent: "#2C2C2E",
+  textColorMain: "#FFFFFF",
 };

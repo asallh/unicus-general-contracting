@@ -1,18 +1,17 @@
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Radius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
   Alert,
-  View,
-  StyleSheet,
-  ScrollView,
   Image,
-  TouchableOpacity,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { IconButton } from "react-native-paper";
 import { ThemedText } from "./themed-text";
-import { ThemedView } from "./themed-view";
 
 export interface ImageInfo {
   uri: string;
@@ -29,15 +28,15 @@ export default function ProjectImagePicker({
   onImagesChange,
   maxImages = 15,
 }: ProjectImagePickerProps) {
-  const theme = useColorScheme() ?? "light";
+  const { colors } = useAppTheme();
   const [images, setImages] = useState<ImageInfo[]>([]);
 
   const requestPermissions = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
-        "Premession Required",
-        "We need access to your photo Library"
+        "Permission Required",
+        "Allow photo library access so you can attach project images."
       );
       return false;
     }
@@ -50,8 +49,8 @@ export default function ProjectImagePicker({
 
     if (images.length >= maxImages) {
       Alert.alert(
-        "Maxumum Images Reached",
-        `You can only select up to ${maxImages} images`
+        "Maximum Reached",
+        `You can select up to ${maxImages} images.`
       );
       return;
     }
@@ -77,7 +76,7 @@ export default function ProjectImagePicker({
       }
     } catch (error) {
       console.error("Error picking image:", error);
-      Alert.alert("Error", "Failed to pick iamge. Please try again.");
+      Alert.alert("Error", "Failed to pick image. Please try again.");
     }
   };
 
@@ -87,109 +86,178 @@ export default function ProjectImagePicker({
     onImagesChange?.(updatedImages);
   };
 
-  const dynamicStyles = StyleSheet.create({
-    container: {
-      gap: 12,
-    },
-    uploadButton: {
-      alignSelf: "flex-start",
-    },
-    imagesContainer: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: 12,
-    },
-    imageWrapper: {
-      position: "relative",
-      width: 100,
-      height: 100,
-      borderRadius: 8,
-      overflow: "hidden",
-      backgroundColor: Colors[theme].background,
-      borderWidth: 1,
-      borderColor: Colors[theme].icon,
-    },
-    image: {
-      width: "100%",
-      height: "100%",
-    },
-    removeButton: {
-      position: "absolute",
-      top: -8,
-      right: -8,
-      backgroundColor: "transparent",
-      borderRadius: 12,
-      padding: 2,
-    },
-    emptyState: {
-      padding: 16,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: Colors[theme].background,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: Colors[theme].icon,
-      borderStyle: "dashed",
-    },
-    emptyStateText: {
-      color: Colors[theme].text,
-      fontSize: 14,
-      marginTop: 8,
-    },
-  });
-
   return (
-    <View style={dynamicStyles.container}>
-      <IconButton
-        icon={"cloud-upload"}
-        mode="contained"
-        size={32}
-        iconColor={Colors[theme].background}
-        containerColor={Colors[theme].primary}
-        onPress={pickImage}
-        style={dynamicStyles.uploadButton}
-      />
-      {images.length > 0 && (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={dynamicStyles.imagesContainer}
+    <View style={styles.container}>
+      {images.length === 0 ? (
+        <Pressable
+          onPress={pickImage}
+          style={({ pressed }) => [
+            styles.dropZone,
+            {
+              borderColor: colors.primary,
+              backgroundColor: colors.primaryMuted,
+              opacity: pressed ? 0.85 : 1,
+            },
+          ]}
         >
-          {images.map((image, index) => (
-            <View key={index} style={dynamicStyles.imageWrapper}>
-              <Image
-                source={{ uri: image.uri }}
-                style={dynamicStyles.image}
-                resizeMode="cover"
-              />
-              <TouchableOpacity
-                style={dynamicStyles.removeButton}
-                onPress={() => removeImage(index)}
-              >
-                <IconButton
-                  icon={"close-circle"}
-                  size={20}
-                  iconColor={Colors[theme].danger}
-                />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
-      )}
-
-      {images.length === 0 && (
-        <ThemedView style={dynamicStyles.emptyState}>
-          <ThemedText style={dynamicStyles.emptyStateText}>
-            No Images Selected. Tap the Upload Image to add iamges
+          <MaterialCommunityIcons
+            name="image-plus"
+            size={36}
+            color={colors.primary}
+          />
+          <ThemedText style={[styles.dropTitle, { color: colors.primary }]}>
+            Add project photos
           </ThemedText>
-        </ThemedView>
-      )}
+          <ThemedText style={[styles.dropHint, { color: colors.textMuted }]}>
+            Tap to choose from your library · up to {maxImages}
+          </ThemedText>
+        </Pressable>
+      ) : (
+        <>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.imageRow}
+          >
+            <Pressable
+              onPress={pickImage}
+              style={({ pressed }) => [
+                styles.addTile,
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.surface,
+                  opacity: pressed ? 0.8 : 1,
+                },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name="plus"
+                size={28}
+                color={colors.primary}
+              />
+              <ThemedText style={[styles.addTileLabel, { color: colors.primary }]}>
+                Add
+              </ThemedText>
+            </Pressable>
 
-      {images.length > 0 && (
-        <ThemedText style={{ fontSize: 12 }}>
-          {images.length} of {maxImages} images selected
-        </ThemedText>
+            {images.map((image, index) => (
+              <View
+                key={`${image.uri}-${index}`}
+                style={[styles.imageWrapper, { borderColor: colors.border }]}
+              >
+                <Image
+                  source={{ uri: image.uri }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+                <Pressable
+                  style={[styles.removeButton, { backgroundColor: colors.surface }]}
+                  onPress={() => removeImage(index)}
+                  hitSlop={8}
+                >
+                  <MaterialCommunityIcons
+                    name="close"
+                    size={14}
+                    color={colors.danger}
+                  />
+                </Pressable>
+                {index === 0 && (
+                  <View
+                    style={[styles.coverBadge, { backgroundColor: colors.secondary }]}
+                  >
+                    <ThemedText style={styles.coverBadgeText}>Cover</ThemedText>
+                  </View>
+                )}
+              </View>
+            ))}
+          </ScrollView>
+
+          <ThemedText style={[styles.countText, { color: colors.textMuted }]}>
+            {images.length} of {maxImages} selected · first photo is the cover
+          </ThemedText>
+        </>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: Spacing.md,
+  },
+  dropZone: {
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderRadius: Radius.lg,
+    paddingVertical: Spacing.xxl,
+    paddingHorizontal: Spacing.lg,
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  dropTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  dropHint: {
+    fontSize: 13,
+    textAlign: "center",
+  },
+  imageRow: {
+    flexDirection: "row",
+    gap: Spacing.md,
+    paddingVertical: 2,
+  },
+  addTile: {
+    width: 96,
+    height: 96,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 2,
+  },
+  addTileLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  imageWrapper: {
+    position: "relative",
+    width: 96,
+    height: 96,
+    borderRadius: Radius.md,
+    overflow: "hidden",
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  removeButton: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  coverBadge: {
+    position: "absolute",
+    left: 6,
+    bottom: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  coverBadgeText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: "#222",
+  },
+  countText: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+});
