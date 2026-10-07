@@ -1,11 +1,11 @@
-import { ThemedText } from "./themed-text";
-import { ThemedView } from "./themed-view";
-import { Pressable, StyleSheet, View, Image } from "react-native";
+import { Radius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { titleCase } from "@/lib/helper";
-import { Project } from "@unicus-monorepo/api";
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Project } from "@unicus-monorepo/api";
+import { Image } from "expo-image";
+import { Pressable, StyleSheet, View } from "react-native";
+import { ThemedText } from "./themed-text";
 
 interface ProjectCardProps {
   project: Project;
@@ -13,59 +13,73 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, onPress }: ProjectCardProps) {
-  const colorScheme = useColorScheme() ?? "light";
+  const { colors } = useAppTheme();
 
   const imageUrl = Array.isArray(project.imageURL)
     ? project.imageURL[0]
     : project.imageURL;
 
+  const photoCount = Array.isArray(project.imageURL)
+    ? project.imageURL.filter(Boolean).length
+    : imageUrl
+      ? 1
+      : 0;
+
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({ opacity: pressed ? 0.78 : 1 })}
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: colors.surface,
+          borderColor: colors.border,
+          opacity: pressed ? 0.85 : 1,
+        },
+      ]}
     >
-      <ThemedView style={styles.card}>
-        {imageUrl ? (
-          <Image
-            source={{ uri: imageUrl }}
-            style={styles.thumbnail}
-            resizeMode="cover"
+      {imageUrl ? (
+        <Image source={{ uri: imageUrl }} style={styles.thumbnail} contentFit="cover" />
+      ) : (
+        <View style={[styles.thumbnail, { backgroundColor: colors.accent }]}>
+          <MaterialCommunityIcons
+            name="image-outline"
+            size={22}
+            color={colors.icon}
           />
-        ) : (
-          <View
-            style={[
-              styles.thumbnailPlaceholder,
-              { backgroundColor: Colors[colorScheme].accent },
-            ]}
+        </View>
+      )}
+
+      <View style={styles.content}>
+        <ThemedText style={styles.title} numberOfLines={2}>
+          {titleCase(project.title)}
+        </ThemedText>
+        {!!project.description && (
+          <ThemedText
+            style={[styles.description, { color: colors.textMuted }]}
+            numberOfLines={2}
           >
+            {project.description}
+          </ThemedText>
+        )}
+        {photoCount > 0 && (
+          <View style={styles.metaRow}>
             <MaterialCommunityIcons
-              name="image-outline"
-              size={24}
-              color={Colors[colorScheme].icon}
+              name="image-multiple-outline"
+              size={14}
+              color={colors.textMuted}
             />
+            <ThemedText style={[styles.meta, { color: colors.textMuted }]}>
+              {photoCount} {photoCount === 1 ? "photo" : "photos"}
+            </ThemedText>
           </View>
         )}
+      </View>
 
-        <View style={styles.content}>
-          <ThemedText style={styles.title} numberOfLines={2}>
-            {titleCase(project.title)}
-          </ThemedText>
-          {!!project.description && (
-            <ThemedText
-              style={[styles.description, { color: Colors[colorScheme].icon }]}
-              numberOfLines={1}
-            >
-              {project.description}
-            </ThemedText>
-          )}
-        </View>
-
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={22}
-          color={Colors[colorScheme].icon}
-        />
-      </ThemedView>
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={22}
+        color={colors.icon}
+      />
     </Pressable>
   );
 }
@@ -74,41 +88,41 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
-    borderRadius: 14,
-    gap: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 4,
-    elevation: 2,
+    padding: Spacing.md,
+    borderRadius: Radius.lg,
+    gap: Spacing.md,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   thumbnail: {
-    width: 66,
-    height: 66,
-    borderRadius: 10,
-    backgroundColor: "#e0e0e0",
-    flexShrink: 0,
-  },
-  thumbnailPlaceholder: {
-    width: 66,
-    height: 66,
-    borderRadius: 10,
-    justifyContent: "center",
+    width: 72,
+    height: 72,
+    borderRadius: Radius.md,
     alignItems: "center",
+    justifyContent: "center",
     flexShrink: 0,
+    overflow: "hidden",
   },
   content: {
     flex: 1,
     gap: 4,
   },
   title: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "600",
-    lineHeight: 20,
+    lineHeight: 21,
   },
   description: {
     fontSize: 13,
     lineHeight: 18,
+  },
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginTop: 2,
+  },
+  meta: {
+    fontSize: 12,
+    fontWeight: "500",
   },
 });
