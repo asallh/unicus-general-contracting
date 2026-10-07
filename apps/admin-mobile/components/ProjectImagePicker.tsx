@@ -1,18 +1,17 @@
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Radius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
   Alert,
-  View,
-  StyleSheet,
-  ScrollView,
   Image,
-  TouchableOpacity,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Button, IconButton } from "react-native-paper";
 import { ThemedText } from "./themed-text";
-import { ThemedView } from "./themed-view";
 
 export interface ImageInfo {
   uri: string;
@@ -29,7 +28,7 @@ export default function ProjectImagePicker({
   onImagesChange,
   maxImages = 15,
 }: ProjectImagePickerProps) {
-  const theme = useColorScheme() ?? "light";
+  const { colors } = useAppTheme();
   const [images, setImages] = useState<ImageInfo[]>([]);
 
   const requestPermissions = async () => {
@@ -37,7 +36,7 @@ export default function ProjectImagePicker({
     if (status !== "granted") {
       Alert.alert(
         "Permission Required",
-        "We need access to your photo library to select images."
+        "Allow photo library access so you can attach project images."
       );
       return false;
     }
@@ -51,7 +50,7 @@ export default function ProjectImagePicker({
     if (images.length >= maxImages) {
       Alert.alert(
         "Maximum Reached",
-        `You can only select up to ${maxImages} images.`
+        `You can select up to ${maxImages} images.`
       );
       return;
     }
@@ -89,75 +88,94 @@ export default function ProjectImagePicker({
 
   return (
     <View style={styles.container}>
-      <Button
-        icon="cloud-upload"
-        mode="outlined"
-        onPress={pickImage}
-        textColor={Colors[theme].primary}
-        style={[styles.uploadButton, { borderColor: Colors[theme].primary }]}
-        contentStyle={styles.uploadButtonContent}
-      >
-        Upload Images
-      </Button>
-
-      {images.length > 0 && (
+      {images.length === 0 ? (
+        <Pressable
+          onPress={pickImage}
+          style={({ pressed }) => [
+            styles.dropZone,
+            {
+              borderColor: colors.primary,
+              backgroundColor: colors.primaryMuted,
+              opacity: pressed ? 0.85 : 1,
+            },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="image-plus"
+            size={36}
+            color={colors.primary}
+          />
+          <ThemedText style={[styles.dropTitle, { color: colors.primary }]}>
+            Add project photos
+          </ThemedText>
+          <ThemedText style={[styles.dropHint, { color: colors.textMuted }]}>
+            Tap to choose from your library · up to {maxImages}
+          </ThemedText>
+        </Pressable>
+      ) : (
         <>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.imageRow}
           >
+            <Pressable
+              onPress={pickImage}
+              style={({ pressed }) => [
+                styles.addTile,
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.surface,
+                  opacity: pressed ? 0.8 : 1,
+                },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name="plus"
+                size={28}
+                color={colors.primary}
+              />
+              <ThemedText style={[styles.addTileLabel, { color: colors.primary }]}>
+                Add
+              </ThemedText>
+            </Pressable>
+
             {images.map((image, index) => (
               <View
-                key={index}
-                style={[
-                  styles.imageWrapper,
-                  { borderColor: Colors[theme].icon + "40" },
-                ]}
+                key={`${image.uri}-${index}`}
+                style={[styles.imageWrapper, { borderColor: colors.border }]}
               >
                 <Image
                   source={{ uri: image.uri }}
                   style={styles.image}
                   resizeMode="cover"
                 />
-                <TouchableOpacity
-                  style={styles.removeButton}
+                <Pressable
+                  style={[styles.removeButton, { backgroundColor: colors.surface }]}
                   onPress={() => removeImage(index)}
-                  hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                  hitSlop={8}
                 >
-                  <IconButton
-                    icon="close-circle"
-                    size={18}
-                    iconColor={Colors[theme].danger}
-                    style={styles.removeIcon}
+                  <MaterialCommunityIcons
+                    name="close"
+                    size={14}
+                    color={colors.danger}
                   />
-                </TouchableOpacity>
+                </Pressable>
+                {index === 0 && (
+                  <View
+                    style={[styles.coverBadge, { backgroundColor: colors.secondary }]}
+                  >
+                    <ThemedText style={styles.coverBadgeText}>Cover</ThemedText>
+                  </View>
+                )}
               </View>
             ))}
           </ScrollView>
 
-          <ThemedText style={[styles.countText, { color: Colors[theme].icon }]}>
-            {images.length} of {maxImages} images selected
+          <ThemedText style={[styles.countText, { color: colors.textMuted }]}>
+            {images.length} of {maxImages} selected · first photo is the cover
           </ThemedText>
         </>
-      )}
-
-      {images.length === 0 && (
-        <ThemedView
-          style={[
-            styles.emptyState,
-            {
-              borderColor: Colors[theme].icon + "40",
-              backgroundColor: Colors[theme].background,
-            },
-          ]}
-        >
-          <ThemedText
-            style={[styles.emptyStateText, { color: Colors[theme].icon }]}
-          >
-            No images selected — tap the button above to add images.
-          </ThemedText>
-        </ThemedView>
       )}
     </View>
   );
@@ -165,27 +183,51 @@ export default function ProjectImagePicker({
 
 const styles = StyleSheet.create({
   container: {
-    gap: 14,
+    gap: Spacing.md,
   },
-  uploadButton: {
-    alignSelf: "flex-start",
-    borderRadius: 10,
+  dropZone: {
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderRadius: Radius.lg,
+    paddingVertical: Spacing.xxl,
+    paddingHorizontal: Spacing.lg,
+    alignItems: "center",
+    gap: Spacing.sm,
   },
-  uploadButtonContent: {
-    height: 44,
-    paddingHorizontal: 4,
+  dropTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  dropHint: {
+    fontSize: 13,
+    textAlign: "center",
   },
   imageRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: Spacing.md,
+    paddingVertical: 2,
+  },
+  addTile: {
+    width: 96,
+    height: 96,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 2,
+  },
+  addTileLabel: {
+    fontSize: 12,
+    fontWeight: "600",
   },
   imageWrapper: {
     position: "relative",
     width: 96,
     height: 96,
-    borderRadius: 10,
+    borderRadius: Radius.md,
     overflow: "hidden",
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   image: {
     width: "100%",
@@ -193,25 +235,26 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     position: "absolute",
-    top: -4,
-    right: -4,
-  },
-  removeIcon: {
-    margin: 0,
-    padding: 0,
-  },
-  emptyState: {
-    padding: 18,
+    top: 6,
+    right: 6,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: "dashed",
   },
-  emptyStateText: {
-    fontSize: 13,
-    textAlign: "center",
-    lineHeight: 18,
+  coverBadge: {
+    position: "absolute",
+    left: 6,
+    bottom: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  coverBadgeText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: "#222",
   },
   countText: {
     fontSize: 12,

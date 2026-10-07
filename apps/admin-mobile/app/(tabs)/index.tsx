@@ -1,194 +1,217 @@
-import { Image } from "expo-image";
-import { StyleSheet, View, Pressable, useColorScheme } from "react-native";
-import { Snackbar } from "react-native-paper";
-import * as Clipboard from "expo-clipboard";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { Colors } from "@/constants/theme";
-import { ThemedView } from "@/components/themed-view";
+import EmptyState from "@/components/EmptyState";
+import Loader from "@/components/Loader";
+import ProjectCard from "@/components/ProjectCard";
+import Screen from "@/components/Screen";
 import { ThemedText } from "@/components/themed-text";
-import { useState } from "react";
-import { useRouter } from "expo-router";
+import { Radius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
+import { trpc } from "@/lib/trpc";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
+import { Snackbar } from "react-native-paper";
 
 const WEBSITE_URL = "https://www.unicuscontracting.com/";
 
-interface ActionCardProps {
-  iconName: keyof typeof MaterialCommunityIcons.glyphMap;
-  title: string;
-  description: string;
-  onPress: () => void;
-  accentColor: string;
-  iconBgColor: string;
-  iconColor: string;
-}
-
-function ActionCard({
-  iconName,
-  title,
-  description,
-  onPress,
-  accentColor,
-  iconBgColor,
-  iconColor,
-}: ActionCardProps) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-    >
-      <ThemedView
-        style={[styles.card, { borderLeftColor: accentColor, borderLeftWidth: 4 }]}
-      >
-        <View style={[styles.iconBg, { backgroundColor: iconBgColor }]}>
-          <MaterialCommunityIcons name={iconName} size={26} color={iconColor} />
-        </View>
-        <View style={styles.cardContent}>
-          <ThemedText style={styles.cardTitle}>{title}</ThemedText>
-          <ThemedText style={styles.cardDescription}>{description}</ThemedText>
-        </View>
-        <MaterialCommunityIcons name="chevron-right" size={22} color="#aaa" />
-      </ThemedView>
-    </Pressable>
-  );
-}
-
-export default function HomeScreen() {
-  const colorScheme = useColorScheme() ?? "light";
-  const theme = colorScheme as "light" | "dark";
+export default function ProjectsScreen() {
   const router = useRouter();
+  const { colors } = useAppTheme();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const {
+    data: projects,
+    error,
+    isLoading,
+    isRefetching,
+    refetch,
+  } = trpc.project.getAll.useQuery();
 
-  const handleCopy = async () => {
+  const handleCopyLink = useCallback(async () => {
     await Clipboard.setStringAsync(WEBSITE_URL);
     setSnackbarVisible(true);
-  };
+  }, []);
 
-  const handleViewProjects = () => {
-    router.push("/views/projects");
-  };
+  const header = (
+    <View style={[styles.header, { borderBottomColor: colors.border }]}>
+      <View style={styles.headerRow}>
+        <Image
+          source={require("@/assets/images/favicon/favicon-21.png")}
+          style={styles.mark}
+          contentFit="contain"
+        />
+        <View style={styles.headerText}>
+          <ThemedText style={styles.title} numberOfLines={1}>
+            Projects
+          </ThemedText>
+          <ThemedText
+            style={[styles.subtitle, { color: colors.textMuted }]}
+            numberOfLines={2}
+          >
+            Portfolio on the Unicus marketing site
+          </ThemedText>
+        </View>
+        <Pressable
+          onPress={handleCopyLink}
+          hitSlop={10}
+          accessibilityLabel="Copy website link"
+          style={({ pressed }) => [
+            styles.linkButton,
+            {
+              backgroundColor: colors.accent,
+              opacity: pressed ? 0.75 : 1,
+            },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="open-in-new"
+            size={18}
+            color={colors.primary}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  if (isLoading) {
+    return (
+      <Screen padded={false} header={header}>
+        <Loader message="Loading projects…" />
+      </Screen>
+    );
+  }
+
+  if (error) {
+    return (
+      <Screen padded={false} header={header}>
+        <EmptyState
+          icon="alert-circle-outline"
+          title="Couldn’t load projects"
+          message={error.message || "Check your connection and try again."}
+          actionLabel="Retry"
+          onAction={() => refetch()}
+        />
+      </Screen>
+    );
+  }
+
+  if (!projects || projects.length === 0) {
+    return (
+      <Screen padded={false} header={header}>
+        <EmptyState
+          icon="briefcase-plus-outline"
+          title="No projects yet"
+          message="Add a project with photos and we’ll publish it to the marketing site."
+          actionLabel="Add Project"
+          onAction={() => router.push("/(tabs)/add")}
+        />
+      </Screen>
+    );
+  }
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{
-        light: Colors.light.secondary,
-        dark: Colors.dark.secondary,
-      }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/full_primary/full_primary.png")}
-          style={styles.mainLogo}
-        />
-      }
-    >
-      <ThemedView style={styles.container}>
-        <ThemedText style={styles.welcomeTitle}>Admin Dashboard</ThemedText>
-        <ThemedText
-          style={[styles.welcomeSubtitle, { color: Colors[theme].icon }]}
-        >
-          Manage projects and site content
-        </ThemedText>
-
-        <View style={styles.cardsContainer}>
-          <ActionCard
-            iconName="briefcase-outline"
-            title="View Projects"
-            description="Browse and manage all published projects"
-            onPress={handleViewProjects}
-            accentColor={Colors[theme].primary}
-            iconBgColor={Colors[theme].primary + "18"}
-            iconColor={Colors[theme].primary}
+    <Screen padded={false} header={header}>
+      <FlatList
+        data={projects}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ProjectCard
+            project={item}
+            onPress={() => router.push(`/project/${item.id}`)}
           />
-          <ActionCard
-            iconName="link-variant"
-            title="Copy Website Link"
-            description={WEBSITE_URL}
-            onPress={handleCopy}
-            accentColor={Colors[theme].tertiary === "#FFFFFF" ? "#888" : Colors[theme].tertiary}
-            iconBgColor={
-              colorScheme === "dark"
-                ? "rgba(255,255,255,0.08)"
-                : "rgba(0,0,0,0.06)"
-            }
-            iconColor={Colors[theme].icon}
+        )}
+        contentContainerStyle={styles.listContent}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListHeaderComponent={
+          <ThemedText style={[styles.countLabel, { color: colors.textMuted }]}>
+            {projects.length} {projects.length === 1 ? "project" : "projects"}
+          </ThemedText>
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={() => {
+              void refetch();
+            }}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
-        </View>
-
-        <Snackbar
-          visible={snackbarVisible}
-          onDismiss={() => setSnackbarVisible(false)}
-          duration={2000}
-          style={styles.snackbar}
-        >
-          Link copied to clipboard!
-        </Snackbar>
-      </ThemedView>
-    </ParallaxScrollView>
+        }
+        showsVerticalScrollIndicator={false}
+      />
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={2000}
+        style={{ backgroundColor: colors.tertiary }}
+      >
+        Website link copied
+      </Snackbar>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  mainLogo: {
-    height: 160,
-    width: "80%",
-    maxWidth: 300,
-    minWidth: 180,
-    alignSelf: "center",
-    resizeMode: "contain",
-    marginTop: 56,
-    marginBottom: 20,
+  header: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.lg,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 4,
-    paddingBottom: 32,
-  },
-  welcomeTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginBottom: 4,
-  },
-  welcomeSubtitle: {
-    fontSize: 14,
-    marginBottom: 20,
-  },
-  cardsContainer: {
-    gap: 12,
-  },
-  card: {
+  headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    borderRadius: 14,
-    gap: 14,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 5,
-    elevation: 2,
+    gap: Spacing.md,
   },
-  iconBg: {
-    width: 50,
-    height: 50,
-    borderRadius: 13,
-    justifyContent: "center",
-    alignItems: "center",
+  mark: {
+    width: 56,
+    height: 56,
     flexShrink: 0,
   },
-  cardContent: {
+  headerText: {
     flex: 1,
-    gap: 3,
+    minWidth: 0,
+    justifyContent: "center",
+    gap: 2,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "600",
+  linkButton: {
+    width: 40,
+    height: 40,
+    borderRadius: Radius.md,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
   },
-  cardDescription: {
+  title: {
+    fontSize: 26,
+    fontWeight: "800",
+    letterSpacing: -0.3,
+    lineHeight: 32,
+    includeFontPadding: false,
+  },
+  subtitle: {
     fontSize: 13,
     lineHeight: 18,
-    color: "#888",
   },
-  snackbar: {
-    marginTop: 16,
+  listContent: {
+    padding: Spacing.lg,
+    paddingBottom: 40,
+  },
+  countLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+    marginBottom: Spacing.md,
+  },
+  separator: {
+    height: Spacing.md,
   },
 });
